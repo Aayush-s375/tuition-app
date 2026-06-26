@@ -1,0 +1,1389 @@
+<!DOCTYPE html>  <html lang="en">  
+<head>  
+<meta charset="UTF-8">  
+<meta name="viewport" content="width=device-width, initial-scale=1.0">  
+<title>Tuition Attendance Manager</title>  <style>  
+  
+
+
+
+
+
+*{  
+margin:0;  
+padding:0;  
+box-sizing:border-box;  
+font-family:Arial,sans-serif;  
+}  
+  
+body{  
+background:#f3f5f7;  
+padding:15px;  
+}  
+  
+.card{  
+background:white;  
+padding:15px;  
+border-radius:12px;  
+margin-bottom:15px;  
+box-shadow:0 2px 6px rgba(0,0,0,.1);  
+}  
+  
+.header{  
+display:flex;  
+justify-content:space-between;  
+align-items:center;  
+}  
+  
+h1{  
+font-size:22px;  
+}  
+  
+.addBtn{  
+width:50px;  
+height:50px;  
+border:none;  
+border-radius:50%;  
+background:#0d6efd;  
+color:white;  
+font-size:28px;  
+}  
+  
+input:not([type="checkbox"]),select{
+width:100%;
+padding:10px;
+margin-top:8px;
+margin-bottom:8px;
+border:1px solid #ccc;
+border-radius:8px;
+}
+  
+button{  
+cursor:pointer;  
+}  
+  
+.saveBtn{  
+width:100%;  
+padding:12px;  
+border:none;  
+background:#0d6efd;  
+color:white;  
+border-radius:8px;  
+font-size:16px;  
+}  
+  
+.student{  
+border:1px solid #ddd;  
+border-left:5px solid #0d6efd;
+padding:10px;  
+border-radius:10px;  
+margin-top:10px;  
+}  
+  
+.studentTop{  
+display:flex;  
+justify-content:space-between;  
+align-items:center;  
+}  
+  
+.feeBtn{
+background:#17a2b8;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+min-width:70px;
+height:36px;
+font-weight:600;
+}
+  
+.deleteBtn{
+background:red;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+margin-left:5px;
+min-width:70px;
+height:36px;
+font-weight:600;
+}
+  
+.status{  
+padding:10px;  
+border-radius:8px;  
+background:#fff3cd;  
+margin-top:10px;  
+}  
+  
+.summary{  
+margin-top:10px;  
+padding:10px;  
+background:#d1ecf1;  
+border-radius:8px;  
+}  
+ .popup{  
+position:fixed;  
+top:0;  
+left:0;  
+width:100%;  
+height:100%;  
+background:rgba(0,0,0,.5);  
+display:none;  
+justify-content:center;  
+align-items:center;  
+}  
+  
+.popupContent{  
+background:white;  
+padding:20px;  
+width:90%;  
+border-radius:12px;  
+}  
+  
+.popupSave{  
+width:100%;  
+padding:12px;  
+background:green;  
+color:white;  
+border:none;  
+border-radius:8px;  
+}  
+
+.switch{
+position:relative;
+display:inline-block;
+width:46px;
+height:24px;
+}
+
+.switch input{
+display:none;
+}
+
+.slider{
+position:absolute;
+cursor:pointer;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#dc3545;
+border-radius:24px;
+transition:.3s;
+}
+
+.slider:before{
+position:absolute;
+content:"";
+height:18px;
+width:18px;
+left:3px;
+bottom:3px;
+background:white;
+border-radius:50%;
+transition:.3s;
+}
+
+.switch input:checked + .slider{
+background:#28a745;
+}
+
+.switch input:checked + .slider:before{
+transform:translateX(22px);
+}
+  
+</style>  
+</head>  <body>  
+<div id="lockScreen" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#f3f5f7;
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999999;
+">
+
+<div style="
+width:90%;
+max-width:320px;
+background:white;
+padding:20px;
+border-radius:12px;
+box-shadow:0 2px 8px rgba(0,0,0,.2);
+text-align:center;
+">
+
+<h2 style="margin-bottom:15px;">App Locked</h2>
+
+<input
+type="password"
+maxlength="4"
+id="unlockPin"
+placeholder="Enter PIN">
+
+<button
+class="saveBtn"
+onclick="unlockApp()">
+Unlock
+</button>
+
+<div style="margin-top:15px;">
+<button
+onclick="forgotPin()"
+style="
+background:none;
+border:none;
+color:#0d6efd;
+font-size:15px;
+cursor:pointer;">
+Forgot PIN?
+</button>
+</div>
+
+</div>
+
+</div>
+<div id="resetPopup" style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.5);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999999;
+">
+
+<div style="
+background:white;
+width:90%;
+max-width:340px;
+padding:20px;
+border-radius:12px;
+">
+
+<h2>Reset PIN</h2>
+
+<p style="margin:15px 0;color:red;font-weight:bold;">
+Warning!
+</p>
+
+<p style="font-size:15px;line-height:22px;">
+
+Resetting your PIN will permanently erase all attendance records, fee records and app data.
+
+This action cannot be undone.
+
+</p>
+
+<p style="margin-top:15px;">
+Type <b>RESET</b> to continue.
+</p>
+
+<input
+type="text"
+id="resetText"
+onkeyup="checkResetText()"
+placeholder="Type RESET">
+
+<div style="
+display:flex;
+gap:10px;
+margin-top:15px;
+">
+
+<button
+class="saveBtn"
+style="background:gray;"
+onclick="closeResetPopup()">
+
+Cancel
+
+</button>
+
+<button
+id="resetBtn"
+class="saveBtn"
+disabled
+style="background:red;opacity:.5;"
+onclick="confirmReset()">
+
+Reset PIN
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+<div class="card header">
+
+<h1>Tuition Attendance</h1>
+
+<div style="
+display:flex;
+align-items:center;
+gap:10px;
+">
+
+<button class="addBtn"
+onclick="addStudent()">
++
+</button>
+
+<label class="switch">
+<input
+type="checkbox"
+id="lockSwitch"
+onchange="toggleLock()">
+<span class="slider"></span>
+</label>
+<div style="position:relative;">
+
+<button
+onclick="toggleMenu()"
+style="
+background:none;
+border:none;
+font-size:24px;
+padding:5px 8px;
+cursor:pointer;
+">
+⋮
+</button>
+
+<div
+id="menuPopup"
+style="
+display:none;
+position:absolute;
+right:0;
+top:35px;
+background:white;
+border:1px solid #ddd;
+border-radius:8px;
+box-shadow:0 2px 8px rgba(0,0,0,.2);
+min-width:170px;
+z-index:999;
+">
+
+<div
+onclick="backupData()"
+style="
+padding:12px;
+cursor:pointer;
+border-bottom:1px solid #eee;
+">
+Backup Data
+</div>
+
+<div
+onclick="restoreData()"
+style="
+padding:12px;
+cursor:pointer;
+border-bottom:1px solid #eee;
+">
+Restore Data
+</div>
+
+<div
+onclick="changePin()"
+style="
+padding:12px;
+cursor:pointer;
+">
+Change PIN
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+ <div class="card">  
+<h2>Daily Attendance</h2>  <input type="date" id="attDate">  
+<button
+id="sundayBtn"
+class="saveBtn"
+style="display:none;background:#6f42c1;margin-bottom:10px;"
+onclick="markAllSunday()">
+Mark All Sunday
+</button>
+<div id="attendanceArea"></div>  <button class="saveBtn" onclick="saveAttendance()">  
+Save Attendance  
+</button>  
+</div>  <div class="card">  
+<h2>Monthly Report & Fee Tracker</h2>  
+<select id="reportMonth" onchange="renderReports()">  
+  <option value="01">January</option>  
+  <option value="02">February</option>  
+  <option value="03">March</option>  
+  <option value="04">April</option>  
+  <option value="05">May</option>  
+  <option value="06">June</option>  
+  <option value="07">July</option>  
+  <option value="08">August</option>  
+  <option value="09">September</option>  
+  <option value="10">October</option>  
+  <option value="11">November</option>  
+  <option value="12">December</option>  
+</select>  
+<div id="reportArea"></div>  </div>   <div class="popup" id="feePopup">  <div <div class="popupContent">
+
+<div style="text-align:right;">
+<button onclick="closeFeePopup()"
+style="
+border:none;
+background:none;
+font-size:22px;
+font-weight:bold;
+">
+✕
+</button>
+</div>
+
+<h3>Update Fee</h3>   <select id="feeMode">  
+<option value="">Select Mode</option>  
+<option>Cash</option>  
+<option>Online</option>  
+</select>  <input type="number"  
+id="feeAmount"  
+placeholder="Amount">
+
+<input type="date"  
+id="feeDate">
+
+<button class="popupSave"  
+onclick="saveFee()">
+Save Fee
+</button>
+
+</div>  </div>  <script>  
+  
+let students = [];  
+let currentStudent = null;  
+function checkSundayButton(){
+
+let date =
+document.getElementById("attDate").value;
+
+if(!date) return;
+
+let day =
+new Date(date).getDay();
+
+document.getElementById("sundayBtn")
+.style.display =
+(day === 0) ? "block" : "none";
+
+}
+function markAllSunday(){
+
+students.forEach((s,index)=>{
+
+document.getElementById(
+"status"+index
+).value = "Sunday";
+
+});
+
+}
+function toggleLock(){
+
+let savedPin =
+localStorage.getItem("appPin");
+
+if(savedPin){
+
+let pin = prompt(
+"Enter PIN to Disable Lock"
+);
+
+if(pin === savedPin){
+
+localStorage.removeItem("appPin");
+
+document.getElementById(
+"lockSwitch"
+).checked = false;
+
+alert("App Lock Disabled");
+
+}else{
+
+alert("Wrong PIN");
+
+}
+
+}else{
+
+let pin =
+prompt("Create 4 Digit PIN");
+
+if(!pin) return;
+
+if(pin.length!=4 || isNaN(pin)){
+
+alert("PIN must be 4 digits");
+
+return;
+
+}
+
+localStorage.setItem(
+"appPin",
+pin
+);
+
+document.getElementById(
+"lockSwitch"
+).checked = true;
+
+alert("App Lock Enabled");
+}
+}
+function addStudent(){  
+  
+let name = prompt("Student Name");  
+  
+if(!name) return;  
+  
+students.push({
+name:name,
+fees: [],
+attendance:[]
+});
+  
+render();  
+  
+}  
+  
+function render(){  
+  
+let attendanceArea =  
+document.getElementById("attendanceArea");  
+  
+attendanceArea.innerHTML="";  
+  
+students.forEach((s,index)=>{  
+  
+attendanceArea.innerHTML += `  
+<div class="student">  
+  
+<b>${s.name}</b>  
+  
+<select id="status${index}">  
+<option>Present</option>  
+<option>Absent ❌</option>  
+<option>Leave</option>  
+<option>Sunday</option>  
+<option>Sunday Manage ✅</option>  
+</select>  
+  
+</div>  
+`;  
+  
+});  
+  
+renderReports();  
+  
+}  
+  
+function saveAttendance(){  
+  
+let date =  
+document.getElementById("attDate").value;  
+  
+if(!date){  
+alert("Select Date");  
+return;  
+}  
+  
+students.forEach((s,index)=>{  
+  
+let status =  
+document.getElementById(  
+"status"+index).value;  
+  
+let existing = s.attendance.find(
+  a => a.date === date
+);
+
+if(existing){
+  existing.status = status;
+}else{
+  s.attendance.push({
+    date: date,
+    status: status
+  });
+}
+  
+});  
+  
+renderReports();  
+  
+alert("Attendance Saved");  
+  
+}  
+  
+function renderReports(){  
+  
+let reportArea =  
+document.getElementById("reportArea");  
+  
+reportArea.innerHTML="";  
+  
+students.forEach((s,index)=>{  
+  
+let present = 0;
+let absent = 0;
+let leave = 0;
+let sundayManage = 0;
+let sunday = 0;
+
+let selectedMonth =
+document.getElementById("reportMonth").value;
+
+s.attendance.forEach(a=>{
+
+let month = a.date.split("-")[1];
+
+if(month === selectedMonth){
+
+if(a.status=="Present"){
+present++;
+}
+
+else if(a.status=="Sunday"){
+sunday++;
+}
+
+else if(a.status=="Sunday Manage ✅"){
+present++;
+sunday++;
+sundayManage++;
+}
+
+else if(a.status=="Absent ❌"){
+absent++;
+}
+
+else if(a.status=="Leave"){
+leave++;
+}
+
+}
+
+});
+absent = Math.max(0, absent - sundayManage);
+absent = Math.max(0, absent - sundayManage);
+let attendanceHtml = "";  
+  let feeInfo = "";
+
+s.fees.forEach(f => {
+
+let feeMonth = f.date.split("-")[1];
+
+if(feeMonth === selectedMonth){
+
+let monthNames = [
+"January","February","March","April",
+"May","June","July","August",
+"September","October","November","December"
+];
+
+let feeMonth =
+parseInt(f.date.split("-")[1]);
+
+let previousMonthName =
+monthNames[(feeMonth + 10) % 12];
+
+let parts = f.date.split("-");
+
+let formattedDate =
+`${parts[2]}/${parts[1]}/${parts[0]}`;
+
+feeInfo =
+`<span style="
+color:green;
+font-weight:bold;
+">
+${previousMonthName} Fee Status : Credited
+</span><br>
+₹${f.amount} via ${f.mode} on ${formattedDate}`;
+
+}
+
+});
+
+if(feeInfo === ""){
+feeInfo =
+`<span style="
+color:#721c24;
+font-weight:bold;
+">
+Fee Status : Pending
+</span>`;
+}
+
+  let sortedAttendance = [...s.attendance];
+
+sortedAttendance.sort((a,b)=>{
+return new Date(a.date) - new Date(b.date);
+});
+sortedAttendance.forEach(a => {
+  
+  let month =  
+  a.date.split("-")[1];  
+  
+  if(month === selectedMonth){  
+  
+    let day =  
+    a.date.split("-")[2];  
+  
+    let color = "#000";
+
+if(a.status=="Present"){
+color = "green";
+}
+else if(a.status=="Absent ❌"){
+color = "red";
+}
+else if(a.status=="Leave"){
+color = "purple";
+}
+else if(a.status=="Sunday"){
+color = "blue";
+}
+else if(a.status=="Sunday Manage ✅"){
+color = "green";
+}
+
+attendanceHtml +=
+`<p style="
+width:220px;
+margin:auto;
+text-align:left;
+color:${color};
+font-weight:600;
+">
+${day} - ${a.status}
+</p>`;
+  }  
+  
+});  
+  
+if(attendanceHtml===""){  
+  attendanceHtml =  
+  "<p>No attendance found</p>";  
+}  
+reportArea.innerHTML += `  
+  
+<div class="student">  
+  
+ <h3 style="
+color:#0d6efd;
+font-weight:700;
+font-size:20px;
+margin-bottom:10px;
+">
+${s.name}
+</h3>
+
+<div style="
+display:flex;
+gap:8px;
+margin-bottom:10px;
+">
+<button class="feeBtn"
+onclick="openFee(${index})">
+Fee
+</button>
+
+<button class="feeBtn"
+onclick="editStudent(${index})">
+Edit
+</button>
+<button class="feeBtn"
+onclick="downloadPDF(${index})">
+Report 
+</button>
+
+<button class="deleteBtn"
+onclick="deleteStudent(${index})">
+Delete
+</button>
+</div>
+<div class="status">
+${feeInfo}
+</div>
+  
+${attendanceHtml}  
+  
+<div class="summary">  
+  
+ P : ${present}
+|
+A : ${absent}
+|
+L : ${leave}
+|
+S : ${sunday}
+</div>  
+  </div>  
+  
+`;  
+  
+});  
+  
+localStorage.setItem(  
+"tuitionData",  
+JSON.stringify(students)  
+);  
+  
+}  
+  
+function openFee(index){
+
+currentStudent=index;
+
+document.getElementById(
+"feePopup"
+).style.display="flex";
+
+}
+
+function closeFeePopup(){
+
+document.getElementById(
+"feePopup"
+).style.display = "none";
+
+}
+
+function saveFee(){
+
+ let mode =  
+document.getElementById(  
+"feeMode"  
+).value;  
+  
+let amount =  
+document.getElementById(  
+"feeAmount"  
+).value;  
+  
+let date =  
+document.getElementById(  
+"feeDate"  
+).value;  
+  
+if(!mode || !amount || !date){  
+  
+alert("Fill all details");  
+  
+return;  
+  
+}  
+  
+students[currentStudent].fees = [{
+amount: amount,
+mode: mode,
+date: date
+}];
+  
+document.getElementById(  
+"feePopup"  
+).style.display="none";  
+  
+renderReports();  
+  
+}  
+  function editStudent(index){
+
+let newName = prompt(
+"Edit Student Name",
+students[index].name
+);
+
+if(newName){
+
+students[index].name = newName;
+
+render();
+
+}
+
+}
+function downloadPDF(index){
+
+let s = students[index];
+
+let selectedMonth =
+document.getElementById("reportMonth").value;
+
+let monthNames = [
+"January","February","March","April",
+"May","June","July","August",
+"September","October","November","December"
+];
+
+let reportYear =
+new Date().getFullYear();
+
+let reportHtml = "";
+
+reportHtml += `
+<h1 style="color:#0d6efd;">
+Tuition Report
+</h1>
+
+<h2>${s.name}</h2>
+
+<p>
+<b>Month :</b>
+${monthNames[parseInt(selectedMonth)-1]},
+${reportYear}
+</p>
+
+<hr>
+`;
+
+let feeFound = false;
+
+s.fees.forEach(f=>{
+
+if(
+f.date.split("-")[1] === selectedMonth
+){
+
+feeFound = true;
+
+let parts = f.date.split("-");
+
+let formattedDate =
+`${parts[2]}/${parts[1]}/${parts[0]}`;
+
+let previousMonthName =
+monthNames[(parseInt(selectedMonth) + 10) % 12];
+
+reportHtml += `
+<h3>Fee Details</h3>
+
+<p style="
+color:green;
+font-weight:bold;
+">
+${previousMonthName} Fee Paid ✓
+</p>
+
+<p>
+₹${f.amount}
+via ${f.mode}
+on ${formattedDate}
+</p>
+
+<hr>
+`;
+}
+
+});
+
+if(!feeFound){
+
+reportHtml += `
+<h3>Fee Details</h3>
+<p>Pending</p>
+<hr>
+`;
+}
+
+reportHtml +=
+`<h3>Attendance</h3>`;
+let present = 0;
+let absent = 0;
+let leave = 0;
+let sunday = 0;
+let sundayManage = 0;
+let foundAttendance = false;
+
+s.attendance.forEach(a=>{
+
+if(
+a.date.split("-")[1] === selectedMonth
+){
+
+foundAttendance = true;
+
+let day =
+a.date.split("-")[2];
+
+reportHtml += `
+<p>
+${day} - ${a.status}
+</p>
+`;
+if(a.status=="Present"){
+present++;
+}
+else if(a.status=="Absent ❌"){
+absent++;
+}
+else if(a.status=="Leave"){
+leave++;
+}
+else if(a.status=="Sunday"){
+sunday++;
+}
+else if(a.status=="Sunday Manage ✅"){
+present++;
+sunday++;
+sundayManage++;
+}
+}
+
+});
+reportHtml += `
+<div style="
+background:#d1ecf1;
+padding:10px;
+border-radius:8px;
+margin-top:15px;
+font-weight:bold;
+font-size:18px;
+">
+<span style="color:green">P : ${present}</span>
+|
+<span style="color:red">A : ${absent}</span>
+|
+<span style="color:purple">L : ${leave}</span>
+|
+<span style="color:blue">S : ${sunday}</span>
+</div>
+`;
+
+if(!foundAttendance){
+
+reportHtml += `
+<p>No attendance found</p>
+`;
+}
+
+let reportWindow =
+window.open("", "_blank");
+reportWindow.document.write(`
+<html>
+<head>
+<title>Report</title>
+</head>
+<body style="
+font-family:Arial;
+padding:20px;
+">
+<div style="text-align:right;margin-bottom:20px;">
+<button
+onclick="window.print()"
+style="
+padding:10px 18px;
+background:#0d6efd;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+">
+Print Report
+</button>
+</div>
+${reportHtml}
+</body>
+</html>
+`);
+reportWindow.document.close();
+
+}
+function checkLock(){
+
+let savedPin =
+localStorage.getItem("appPin");
+
+if(savedPin){
+
+document.getElementById("lockScreen")
+.style.display = "flex";
+
+}
+
+}
+
+function unlockApp(){
+
+let pin =
+document.getElementById("unlockPin").value;
+
+let savedPin =
+localStorage.getItem("appPin");
+
+if(pin === savedPin){
+
+document.getElementById("lockScreen")
+.style.display = "none";
+
+document.getElementById("unlockPin").value="";
+
+}else{
+
+alert("Wrong PIN");
+
+document.getElementById("unlockPin").value="";
+
+}
+
+}
+
+function forgotPin(){
+
+document.getElementById("resetPopup").style.display="flex";
+
+}
+
+function closeResetPopup(){
+
+document.getElementById("resetPopup").style.display="none";
+
+document.getElementById("resetText").value="";
+
+document.getElementById("resetBtn").disabled=true;
+
+document.getElementById("resetBtn").style.opacity=".5";
+
+}
+
+function checkResetText(){
+
+let text=document.getElementById("resetText").value;
+
+let btn=document.getElementById("resetBtn");
+
+if(text==="RESET"){
+
+btn.disabled=false;
+
+btn.style.opacity="1";
+
+}else{
+
+btn.disabled=true;
+
+btn.style.opacity=".5";
+
+}
+
+}
+
+function confirmReset(){
+
+localStorage.clear();
+
+location.reload();
+
+}
+function toggleMenu(){
+
+let menu=document.getElementById("menuPopup");
+
+if(menu.style.display=="block"){
+
+menu.style.display="none";
+
+}else{
+
+menu.style.display="block";
+
+}
+
+}
+
+function changePin(){
+
+document.getElementById("menuPopup").style.display="none";
+
+alert("Coming in Step 4");
+
+}
+function backupData(){
+
+document.getElementById("menuPopup").style.display="none";
+
+let backup = {
+
+students: students,
+
+appPin: localStorage.getItem("appPin")
+
+};
+
+let data = JSON.stringify(backup,null,2);
+
+let blob = new Blob([data],{
+type:"application/json"
+});
+
+let url = URL.createObjectURL(blob);
+
+let a = document.createElement("a");
+
+let today = new Date();
+
+let fileName =
+"Tuition_Backup_" +
+today.getFullYear() + "-" +
+String(today.getMonth()+1).padStart(2,"0") + "-" +
+String(today.getDate()).padStart(2,"0") +
+".json";
+
+a.href = url;
+
+a.download = fileName;
+
+a.click();
+
+URL.revokeObjectURL(url);
+
+alert("Backup Created Successfully");
+
+}
+
+function restoreData(){
+
+document.getElementById("menuPopup").style.display="none";
+
+document.getElementById("restoreFile").click();
+
+}
+function restoreBackup(event){
+
+let file = event.target.files[0];
+
+if(!file) return;
+
+let reader = new FileReader();
+
+reader.onload = function(e){
+
+try{
+
+let backup = JSON.parse(e.target.result);
+
+if(!backup.students){
+
+alert("Invalid Backup File");
+
+return;
+
+}
+
+students = backup.students;
+
+localStorage.setItem(
+"tuitionData",
+JSON.stringify(students)
+);
+
+if(backup.appPin){
+
+localStorage.setItem(
+"appPin",
+backup.appPin
+);
+
+}else{
+
+localStorage.removeItem(
+"appPin"
+);
+
+}
+
+render();
+
+if(localStorage.getItem("appPin")){
+
+document.getElementById("lockSwitch").checked=true;
+
+}else{
+
+document.getElementById("lockSwitch").checked=false;
+
+}
+
+alert("Backup Restored Successfully");
+
+}catch{
+
+alert("Invalid Backup File");
+
+}
+
+document.getElementById("restoreFile").value="";
+
+};
+
+reader.readAsText(file);
+
+}
+function deleteStudent(index){  
+  if(confirm("Delete Student?")){  
+  students.splice(index,1);  
+  render();   
+}  
+}  
+ </script>    <script>  
+window.onload = function () {  
+  let today = new Date();  
+document.getElementById("attDate").valueAsDate = today;  
+checkSundayButton();
+
+document.getElementById("attDate")
+.addEventListener("change", checkSundayButton);
+document.getElementById("reportMonth").value =  
+    String(today.getMonth() + 1).padStart(2, "0");  
+  let saved =  
+    localStorage.getItem("tuitionData");  
+  if(saved){
+students = JSON.parse(saved);
+students.forEach(s => {
+if(!s.fees){
+s.fees = [];
+}
+});
+
+render();
+if(localStorage.getItem("appPin")){
+
+document.getElementById(
+"lockSwitch"
+).checked = true;
+
+}
+}
+  checkLock();
+};  
+  </script>  
+<input
+type="file"
+id="restoreFile"
+accept=".json"
+style="display:none"
+onchange="restoreBackup(event)">
+</body>  
+</html>
