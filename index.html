@@ -1053,6 +1053,9 @@ sundayManage++;
 }
 
 });
+  if (sundayManage > 0) {
+    absent = Math.max(0, absent - sundayManage);
+  }
 reportHtml += `
 <div style="
 background:#d1ecf1;
