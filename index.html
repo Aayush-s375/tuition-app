@@ -588,6 +588,7 @@ attendanceArea.innerHTML += `
 <option>Leave</option>  
 <option>Sunday</option>  
 <option>Sunday Manage ✅</option>  
+<option>Custom</option>
 </select>  
   
 </div>  
@@ -614,6 +615,17 @@ students.forEach((s,index)=>{
 let status =  
 document.getElementById(  
 "status"+index).value;  
+  if(status=="Custom"){
+
+status = prompt("Enter Custom Status");
+
+if(!status){
+
+status = "Custom";
+
+}
+
+  }
   
 let existing = s.attendance.find(
   a => a.date === date
@@ -768,6 +780,9 @@ color = "blue";
 else if(a.status=="Sunday Manage ✅"){
 color = "green";
 }
+    else{
+color="#ff8800";
+  }
 
 attendanceHtml +=
 `<p style="
