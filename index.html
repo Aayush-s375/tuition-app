@@ -706,7 +706,7 @@ absent++;
 else if(a.status=="Leave"){
 leave++;
 }
-else if(a.status=="EH"){
+else if(a.status.startsWith("EH|")){
 extraHoliday++;
   }
 }
