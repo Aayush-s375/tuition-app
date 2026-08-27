@@ -945,11 +945,24 @@ return;
   
 }  
   
-students[currentStudent].fees = [{
+let existingFee = students[currentStudent].fees.find(
+f => f.date === date
+);
+
+if(existingFee){
+
+existingFee.amount = amount;
+existingFee.mode = mode;
+
+}else{
+
+students[currentStudent].fees.push({
 amount: amount,
 mode: mode,
 date: date
-}];
+});
+
+  }
   
 document.getElementById(  
 "feePopup"  
