@@ -610,11 +610,12 @@ let text = prompt("Enter Extra Holiday");
 
 if(text){
 
-select.innerHTML += `<option value="EH|${text}" selected>${text}</option>`;
+select.dataset.customStatus = text;
 
 }else{
 
 select.value="Present";
+delete select.dataset.customStatus;
 
 }
 
@@ -634,9 +635,26 @@ return;
   
 students.forEach((s,index)=>{  
   
-let status =  
-document.getElementById(  
-"status"+index).value;  
+ let select =
+document.getElementById("status"+index);
+
+let status = select.value;
+
+if(status=="Custom"){
+
+let customText = select.dataset.customStatus;
+
+if(customText){
+
+status = "EH|" + customText;
+
+}else{
+
+status = "Custom";
+
+}
+
+} 
   
   
 let existing = s.attendance.find(
@@ -1046,6 +1064,7 @@ let absent = 0;
 let leave = 0;
 let sunday = 0;
 let sundayManage = 0;
+let extraHoliday = 0;
 let foundAttendance = false;
 
 s.attendance.forEach(a=>{
@@ -1061,7 +1080,7 @@ a.date.split("-")[2];
 
 reportHtml += `
 <p>
-${day} - ${a.status}
+${day} - ${a.status.startsWith("EH|") ? a.status.split("|")[1] : a.status}
 </p>
 `;
 if(a.status=="Present"){
@@ -1081,6 +1100,9 @@ present++;
 sunday++;
 sundayManage++;
 }
+  else if(a.status.startsWith("EH|")){
+extraHoliday++;
+  }
 }
 
 });
@@ -1103,6 +1125,7 @@ font-size:18px;
 <span style="color:purple">L : ${leave}</span>
 |
 <span style="color:blue">S : ${sunday}</span>
+${extraHoliday > 0 ? `| <span style="color:#ff8800">EH : ${extraHoliday}</span>` : ""}
 </div>
 `;
 
