@@ -610,7 +610,7 @@ let text = prompt("Enter Extra Holiday");
 
 if(text){
 
-select.innerHTML += `<option value="EH" selected>${text}</option>`;
+select.innerHTML += `<option value="EH|${text}" selected>${text}</option>`;
 
 }else{
 
@@ -807,7 +807,7 @@ text-align:left;
 color:${color};
 font-weight:600;
 ">
-${day} - ${a.status}
+${day} - ${a.status.startsWith("EH|") ? a.status.split("|")[1] : a.status}
 </p>`;
   }  
   
