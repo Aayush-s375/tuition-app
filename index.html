@@ -581,8 +581,9 @@ attendanceArea.innerHTML += `
 <div class="student">  
   
 <b>${s.name}</b>  
+
+<select id="status${index}" onchange="customStatus(${index})">
   
-<select id="status${index}">  
 <option>Present</option>  
 <option>Absent ❌</option>  
 <option>Leave</option>  
@@ -599,6 +600,27 @@ attendanceArea.innerHTML += `
 renderReports();  
   
 }  
+  function customStatus(index){
+
+let select = document.getElementById("status"+index);
+
+if(select.value=="Custom"){
+
+let text = prompt("Enter Extra Holiday");
+
+if(text){
+
+select.innerHTML += `<option value="EH" selected>${text}</option>`;
+
+}else{
+
+select.value="Present";
+
+}
+
+}
+
+  }
   
 function saveAttendance(){  
   
@@ -615,17 +637,7 @@ students.forEach((s,index)=>{
 let status =  
 document.getElementById(  
 "status"+index).value;  
-  if(status=="Custom"){
-
-status = prompt("Enter Custom Status");
-
-if(!status){
-
-status = "Custom";
-
-}
-
-  }
+  
   
 let existing = s.attendance.find(
   a => a.date === date
@@ -662,6 +674,7 @@ let absent = 0;
 let leave = 0;
 let sundayManage = 0;
 let sunday = 0;
+let extraHoliday = 0;
 
 let selectedMonth =
 document.getElementById("reportMonth").value;
@@ -693,7 +706,9 @@ absent++;
 else if(a.status=="Leave"){
 leave++;
 }
-
+else if(a.status=="EH"){
+extraHoliday++;
+  }
 }
 
 });
@@ -854,7 +869,8 @@ A : ${absent}
 L : ${leave}
 |
 S : ${sunday}
-</div>  
+${extraHoliday > 0 ? `| EH : ${extraHoliday}` : ""}
+</div>
   </div>  
   
 `;  
