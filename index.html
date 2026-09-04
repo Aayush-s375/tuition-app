@@ -98,6 +98,8 @@ height:36px;
 font-weight:600;
 }
   
+.activeBtn{background:#28a745;color:white;border:none;padding:8px 12px;border-radius:8px;min-width:80px;height:36px;font-weight:600;}
+.inactiveBtn{background:#6c757d;color:white;border:none;padding:8px 12px;border-radius:8px;min-width:80px;height:36px;font-weight:600;}
 .deleteBtn{
 background:red;
 color:white;
@@ -424,7 +426,8 @@ Save Attendance
 </button>  
 </div>  <div class="card">  
 <h2>Monthly Report & Fee Tracker</h2>  
-<select id="reportMonth" onchange="renderReports()">  
+<div style="display:flex;gap:8px;">
+<select id="reportMonth" style="flex:1;min-width:0;" onchange="renderReports()">  
   <option value="01">January</option>  
   <option value="02">February</option>  
   <option value="03">March</option>  
@@ -437,8 +440,10 @@ Save Attendance
   <option value="10">October</option>  
   <option value="11">November</option>  
   <option value="12">December</option>  
-</select>  
-<div id="reportArea"></div>  </div>   <div class="popup" id="feePopup">  <div <div class="popupContent">
+</select>
+<select id="reportYear" onchange="renderReports()" style="flex:1;min-width:0;"></select>
+</div>
+<div id="reportArea"></div>  </div>   <div class="popup" id="feePopup">  <div class="popupContent">
 
 <div style="text-align:right;">
 <button onclick="closeFeePopup()"
@@ -468,7 +473,69 @@ onclick="saveFee()">
 Save Fee
 </button>
 
-</div>  </div>  <script>  
+</div>  </div>
+<div class="popup" id="feeStatusPopup">
+  <div class="popupContent">
+
+    <h3>Fee Status</h3>
+
+    <div style="
+      display:flex;
+      gap:10px;
+      margin-top:20px;
+    ">
+
+      <button
+        class="saveBtn"
+        style="background:gray;"
+        onclick="closeFeeStatus()">
+        Cancel
+      </button>
+
+      <button
+        class="saveBtn"
+        style="background:red;"
+        onclick="deleteFeeStatus()">
+        Delete Status
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="popup" id="attendanceStatusPopup">
+  <div class="popupContent">
+    <h3>Attendance Status</h3>
+    <p id="attendanceStatusText" style="margin-top:12px;font-weight:600;"></p>
+    <div style="display:flex;gap:10px;margin-top:20px;">
+      <button class="saveBtn" style="background:gray;" onclick="closeAttendanceStatus()">Cancel</button>
+      <button class="saveBtn" style="background:red;" onclick="deleteAttendanceStatus()">Delete Attendance</button>
+    </div>
+  </div>
+</div>
+  <div class="popup" id="studentDetailsPopup">
+  <div class="popupContent">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+      <h3 id="studentDetailsName" style="margin:0;flex:1;"></h3>
+      <button id="studentActiveBtn" class="feeBtn" onclick="toggleStudentActiveFromDetails()" style="padding:6px 10px;min-width:auto;"></button>
+    </div>
+    <div id="studentDetailsView" style="margin-top:18px;text-align:left;"></div>
+    <div id="studentDetailsForm" style="display:none;margin-top:16px;text-align:left;">
+      <label style="font-weight:600;display:block;margin-bottom:5px;">Mobile Number</label>
+      <input type="tel" id="studentMobile" placeholder="Mobile Number" style="width:100%;box-sizing:border-box;margin-bottom:12px;">
+      <label style="font-weight:600;display:block;margin-bottom:5px;">Address</label>
+      <textarea id="studentAddress" placeholder="Address" style="width:100%;box-sizing:border-box;min-height:80px;resize:vertical;"></textarea>
+      <button class="popupSave" onclick="saveStudentDetails()" style="margin-top:12px;">Save Details</button>
+    </div>
+    <div id="studentDetailsActions" style="display:flex;gap:10px;margin-top:18px;">
+      <button class="saveBtn" style="background:gray;" onclick="closeStudentDetails()">Close</button>
+      <button id="studentDetailsEditBtn" class="saveBtn" onclick="editStudentDetails()">Edit Details</button>
+    </div>
+  </div>
+</div>
+
+<script>  
   
 let students = [];  
 let currentStudent = null;  
@@ -490,6 +557,8 @@ document.getElementById("sundayBtn")
 function markAllSunday(){
 
 students.forEach((s,index)=>{
+
+if(s.active === false) return;
 
 document.getElementById(
 "status"+index
@@ -523,6 +592,8 @@ alert("App Lock Disabled");
 
 alert("Wrong PIN");
 
+document.getElementById("lockSwitch").checked = true;
+
 }
 
 }else{
@@ -530,12 +601,15 @@ alert("Wrong PIN");
 let pin =
 prompt("Create 4 Digit PIN");
 
-if(!pin) return;
+if(!pin){
+  document.getElementById("lockSwitch").checked = false;
+  return;
+}
 
 if(pin.length!=4 || isNaN(pin)){
 
 alert("PIN must be 4 digits");
-
+document.getElementById("lockSwitch").checked = false;
 return;
 
 }
@@ -561,7 +635,8 @@ if(!name) return;
 students.push({
 name:name,
 fees: [],
-attendance:[]
+attendance:[],
+active:true
 });
   
 render();  
@@ -569,38 +644,30 @@ render();
 }  
   
 function render(){  
-  
-let attendanceArea =  
-document.getElementById("attendanceArea");  
-  
-attendanceArea.innerHTML="";  
-  
-students.forEach((s,index)=>{  
-  
-attendanceArea.innerHTML += `  
-<div class="student">  
-  
-<b>${s.name}</b>  
+  let attendanceArea = document.getElementById("attendanceArea");  
+  attendanceArea.innerHTML="";  
 
-<select id="status${index}" onchange="customStatus(${index})">
-  
-<option>Present</option>  
-<option>Absent ❌</option>  
-<option>Leave</option>  
-<option>Sunday</option>  
-<option>Sunday Manage ✅</option>  
-<option>Custom</option>
-</select>  
-  
-</div>  
-`;  
-  
-});  
-  
-renderReports();  
-  
+  students.forEach((s,index)=>{  
+    if(s.active === false) return;
+
+    attendanceArea.innerHTML += `  
+    <div class="student">  
+      <b>${s.name}</b>  
+      <select id="status${index}" onchange="customStatus(${index})">
+        <option>Present</option>  
+        <option>Absent ❌</option>  
+        <option>Leave</option>  
+        <option>Sunday</option>  
+        <option>Sunday Manage ✅</option>  
+        <option>Custom</option>
+      </select>  
+    </div>  
+    `;  
+  });  
+
+  renderReports();  
 }  
-  function customStatus(index){
+    function customStatus(index){
 
 let select = document.getElementById("status"+index);
 
@@ -634,6 +701,7 @@ return;
 }  
   
 students.forEach((s,index)=>{  
+  if(s.active === false) return;
   
  let select =
 document.getElementById("status"+index);
@@ -678,230 +746,149 @@ alert("Attendance Saved");
   
 }  
   
+function populateReportYears(){
+  const yearSelect = document.getElementById("reportYear");
+  if(!yearSelect) return;
+
+  const currentYear = new Date().getFullYear();
+  const oldYear = yearSelect.value;
+
+  // Fixed year range: 2025 to 2035
+  yearSelect.innerHTML = "";
+  for(let year = 2025; year <= 2035; year++){
+    const option = document.createElement("option");
+    option.value = String(year);
+    option.textContent = String(year);
+    yearSelect.appendChild(option);
+  }
+
+  if(oldYear && Number(oldYear) >= 2025 && Number(oldYear) <= 2035){
+    yearSelect.value = oldYear;
+  }else if(currentYear >= 2025 && currentYear <= 2035){
+    yearSelect.value = String(currentYear);
+  }else{
+    yearSelect.value = "2026";
+  }
+}
+
 function renderReports(){  
-  
-let reportArea =  
-document.getElementById("reportArea");  
-  
-reportArea.innerHTML="";  
-  
-students.forEach((s,index)=>{  
-  
-let present = 0;
-let absent = 0;
-let leave = 0;
-let sundayManage = 0;
-let sunday = 0;
-let extraHoliday = 0;
+  let reportArea = document.getElementById("reportArea");  
+  reportArea.innerHTML="";
 
-let selectedMonth =
-document.getElementById("reportMonth").value;
+  populateReportYears();
 
-s.attendance.forEach(a=>{
+  let selectedMonth = document.getElementById("reportMonth").value;
+  let selectedYear = document.getElementById("reportYear").value;
 
-let month = a.date.split("-")[1];
+  students.forEach((s,index)=>{  
+    if(!s.attendance) s.attendance=[];
+    if(!s.fees) s.fees=[];
 
-if(month === selectedMonth){
+    let present = 0, absent = 0, leave = 0;
+    let sundayManage = 0, sunday = 0, extraHoliday = 0;
 
-if(a.status=="Present"){
-present++;
+    s.attendance.forEach(a=>{
+      let parts = a.date.split("-");
+      if(parts[0] === selectedYear && parts[1] === selectedMonth){
+        if(a.status=="Present") present++;
+        else if(a.status=="Sunday") sunday++;
+        else if(a.status=="Sunday Manage ✅"){
+          present++; sunday++; sundayManage++;
+        }
+        else if(a.status=="Absent ❌") absent++;
+        else if(a.status=="Leave") leave++;
+        else if(a.status.startsWith("EH|")) extraHoliday++;
+      }
+    });
+
+    absent = Math.max(0, absent - sundayManage);
+
+    let attendanceHtml = "";
+    let feeInfo = "";
+
+    s.fees.forEach(f=>{
+      let parts = f.date.split("-");
+      if(parts[0] === selectedYear && parts[1] === selectedMonth){
+        const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        let feeMonth = parseInt(parts[1]);
+        let previousMonthName = monthNames[(feeMonth + 10) % 12];
+        let formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+        feeInfo =
+        `<span style="color:green;font-weight:bold;">
+        ${previousMonthName} Fee Status : Credited
+        </span><br>
+        ₹${f.amount} via ${f.mode} on ${formattedDate}`;
+      }
+    });
+
+    if(feeInfo === ""){
+      feeInfo = `<span style="color:#721c24;font-weight:bold;">Fee Status : Pending</span>`;
+    }
+
+    let sortedAttendance = [...s.attendance];
+    sortedAttendance.sort((a,b)=>new Date(a.date)-new Date(b.date));
+
+    sortedAttendance.forEach(a=>{
+      let parts = a.date.split("-");
+      if(parts[0] === selectedYear && parts[1] === selectedMonth){
+        let day = parts[2];
+        let color = "#000";
+        if(a.status=="Present") color="green";
+        else if(a.status=="Absent ❌") color="red";
+        else if(a.status=="Leave") color="purple";
+        else if(a.status=="Sunday") color="blue";
+        else if(a.status=="Sunday Manage ✅") color="green";
+        else color="#ff8800";
+
+        let displayStatus = a.status.startsWith("EH|") ? a.status.split("|")[1] : a.status;
+
+        attendanceHtml +=
+        `<p onclick="openAttendanceStatus(${index},'${a.date.replace(/'/g,"\\'")}')" style="
+        width:220px;
+        margin:auto;
+        text-align:left;
+        color:${color};
+        font-weight:600;
+        cursor:pointer;
+        padding:3px 0;
+        ">
+        ${day} - ${displayStatus}
+        </p>`;
+      }
+    });
+
+    if(attendanceHtml==="") attendanceHtml="<p>No attendance found</p>";
+
+    reportArea.innerHTML += `
+    <div class="student">
+      <div style="margin-bottom:10px;">
+        <h3 onclick="openStudentDetails(${index})" style="color:#0d6efd;font-weight:700;font-size:20px;margin:0;cursor:pointer;text-decoration:underline;">${s.name}</h3>
+      </div>
+
+      <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:nowrap;">
+        <button class="feeBtn" onclick="openFee(${index})" style="padding:6px 5px;min-width:0;flex:1;">Fee</button>
+        <button class="feeBtn" onclick="editStudent(${index})" style="padding:6px 5px;min-width:0;flex:1;">Edit</button>
+        <button class="feeBtn" onclick="downloadPDF(${index})" style="padding:6px 5px;min-width:0;flex:1;">Report</button>
+        <button class="deleteBtn" onclick="deleteStudent(${index})" style="padding:6px 5px;min-width:0;flex:1;">Delete</button>
+      </div>
+
+      <div class="status" onclick="openFeeStatus(${index})" style="cursor:pointer;">
+        ${feeInfo}
+      </div>
+
+      ${attendanceHtml}
+
+      <div class="summary">
+        P : ${present} | A : ${absent} | L : ${leave} | S : ${sunday}
+        ${extraHoliday > 0 ? `| EH : ${extraHoliday}` : ""}
+      </div>
+    </div>`;
+  });
+
+  localStorage.setItem("tuitionData", JSON.stringify(students));
 }
 
-else if(a.status=="Sunday"){
-sunday++;
-}
-
-else if(a.status=="Sunday Manage ✅"){
-present++;
-sunday++;
-sundayManage++;
-}
-
-else if(a.status=="Absent ❌"){
-absent++;
-}
-
-else if(a.status=="Leave"){
-leave++;
-}
-else if(a.status.startsWith("EH|")){
-extraHoliday++;
-  }
-}
-
-});
-absent = Math.max(0, absent - sundayManage);
-
-let attendanceHtml = "";  
-  let feeInfo = "";
-
-s.fees.forEach(f => {
-
-let feeMonth = f.date.split("-")[1];
-
-if(feeMonth === selectedMonth){
-
-let monthNames = [
-"January","February","March","April",
-"May","June","July","August",
-"September","October","November","December"
-];
-
-let feeMonth =
-parseInt(f.date.split("-")[1]);
-
-let previousMonthName =
-monthNames[(feeMonth + 10) % 12];
-
-let parts = f.date.split("-");
-
-let formattedDate =
-`${parts[2]}/${parts[1]}/${parts[0]}`;
-
-feeInfo =
-`<span style="
-color:green;
-font-weight:bold;
-">
-${previousMonthName} Fee Status : Credited
-</span><br>
-₹${f.amount} via ${f.mode} on ${formattedDate}`;
-
-}
-
-});
-
-if(feeInfo === ""){
-feeInfo =
-`<span style="
-color:#721c24;
-font-weight:bold;
-">
-Fee Status : Pending
-</span>`;
-}
-
-  let sortedAttendance = [...s.attendance];
-
-sortedAttendance.sort((a,b)=>{
-return new Date(a.date) - new Date(b.date);
-});
-sortedAttendance.forEach(a => {
-  
-  let month =  
-  a.date.split("-")[1];  
-  
-  if(month === selectedMonth){  
-  
-    let day =  
-    a.date.split("-")[2];  
-  
-    let color = "#000";
-
-if(a.status=="Present"){
-color = "green";
-}
-else if(a.status=="Absent ❌"){
-color = "red";
-}
-else if(a.status=="Leave"){
-color = "purple";
-}
-else if(a.status=="Sunday"){
-color = "blue";
-}
-else if(a.status=="Sunday Manage ✅"){
-color = "green";
-}
-    else{
-color="#ff8800";
-  }
-
-attendanceHtml +=
-`<p style="
-width:220px;
-margin:auto;
-text-align:left;
-color:${color};
-font-weight:600;
-">
-${day} - ${a.status.startsWith("EH|") ? a.status.split("|")[1] : a.status}
-</p>`;
-  }  
-  
-});  
-  
-if(attendanceHtml===""){  
-  attendanceHtml =  
-  "<p>No attendance found</p>";  
-}  
-reportArea.innerHTML += `  
-  
-<div class="student">  
-  
- <h3 style="
-color:#0d6efd;
-font-weight:700;
-font-size:20px;
-margin-bottom:10px;
-">
-${s.name}
-</h3>
-
-<div style="
-display:flex;
-gap:8px;
-margin-bottom:10px;
-">
-<button class="feeBtn"
-onclick="openFee(${index})">
-Fee
-</button>
-
-<button class="feeBtn"
-onclick="editStudent(${index})">
-Edit
-</button>
-<button class="feeBtn"
-onclick="downloadPDF(${index})">
-Report 
-</button>
-
-<button class="deleteBtn"
-onclick="deleteStudent(${index})">
-Delete
-</button>
-</div>
-<div class="status">
-${feeInfo}
-</div>
-  
-${attendanceHtml}  
-  
-<div class="summary">  
-  
- P : ${present}
-|
-A : ${absent}
-|
-L : ${leave}
-|
-S : ${sunday}
-${extraHoliday > 0 ? `| EH : ${extraHoliday}` : ""}
-</div>
-  </div>  
-  
-`;  
-  
-});  
-  
-localStorage.setItem(  
-"tuitionData",  
-JSON.stringify(students)  
-);  
-  
-}  
-  
 function openFee(index){
 
 currentStudent=index;
@@ -918,6 +905,72 @@ document.getElementById(
 "feePopup"
 ).style.display = "none";
 
+}
+
+
+function openFeeStatus(index){
+  currentStudent = index;
+  document.getElementById("feeStatusPopup").style.display = "flex";
+}
+
+function closeFeeStatus(){
+  document.getElementById("feeStatusPopup").style.display = "none";
+}
+
+function deleteFeeStatus(){
+  if(!confirm("Are you sure you want to delete this fee status?")) return;
+
+  let selectedMonth = document.getElementById("reportMonth").value;
+  let selectedYear = document.getElementById("reportYear").value;
+  let student = students[currentStudent];
+
+  if(!student || !student.fees) return;
+
+  student.fees = student.fees.filter(f=>{
+    let parts = f.date.split("-");
+    return !(parts[0] === selectedYear && parts[1] === selectedMonth);
+  });
+
+  localStorage.setItem("tuitionData", JSON.stringify(students));
+  closeFeeStatus();
+  renderReports();
+}
+
+let selectedAttendanceStudent = null;
+let selectedAttendanceDate = null;
+
+function openAttendanceStatus(index,date){
+  selectedAttendanceStudent = index;
+  selectedAttendanceDate = date;
+
+  let student = students[index];
+  let record = student && (student.attendance || []).find(a=>a.date===date);
+  let statusText = record ? (record.status.startsWith("EH|") ? record.status.split("|")[1] : record.status) : "";
+
+  document.getElementById("attendanceStatusText").textContent =
+    `${date.split("-")[2]} - ${statusText}`;
+  document.getElementById("attendanceStatusPopup").style.display = "flex";
+}
+
+function closeAttendanceStatus(){
+  document.getElementById("attendanceStatusPopup").style.display = "none";
+  selectedAttendanceStudent = null;
+  selectedAttendanceDate = null;
+}
+
+function deleteAttendanceStatus(){
+  if(!confirm("Are you sure you want to delete this attendance?")) return;
+
+  let student = students[selectedAttendanceStudent];
+  if(student && student.attendance){
+    student.attendance = student.attendance.filter(
+      a => a.date !== selectedAttendanceDate
+    );
+    localStorage.setItem("tuitionData", JSON.stringify(students));
+  }
+
+  closeAttendanceStatus();
+  renderReports();
 }
 
 function saveFee(){
@@ -971,7 +1024,81 @@ document.getElementById(
 renderReports();  
   
 }  
-  function editStudent(index){
+  let selectedStudentDetails = null;
+
+function openStudentDetails(index){
+  selectedStudentDetails = index;
+  let st = students[index];
+  if(typeof st.mobile === "undefined") st.mobile = "";
+  if(typeof st.address === "undefined") st.address = "";
+  document.getElementById("studentDetailsName").textContent = st.name;
+  updateStudentActiveButton();
+  document.getElementById("studentDetailsView").style.display = "block";
+  renderStudentDetails();
+  document.getElementById("studentDetailsPopup").style.display = "flex";
+}
+
+function updateStudentActiveButton(){
+  let st = students[selectedStudentDetails];
+  let btn = document.getElementById("studentActiveBtn");
+  btn.textContent = st.active === false ? "Activate" : "Inactive";
+  btn.style.background = st.active === false ? "#28a745" : "#6c757d";
+}
+
+function renderStudentDetails(){
+  let st = students[selectedStudentDetails];
+  let hasDetails = !!(st.mobile || st.address);
+  let view = document.getElementById("studentDetailsView");
+  let form = document.getElementById("studentDetailsForm");
+  let editBtn = document.getElementById("studentDetailsEditBtn");
+  if(hasDetails){
+    view.innerHTML = `<div style="margin-bottom:12px;"><strong>Mobile Number:</strong><br>${st.mobile || "Not added"}</div><div><strong>Address:</strong><br>${st.address || "Not added"}</div>`;
+    form.style.display = "none";
+    editBtn.style.display = "block";
+  }else{
+    view.innerHTML = `<p style="margin:0 0 12px;font-weight:600;">Student details not added yet.</p>`;
+    form.style.display = "block";
+    document.getElementById("studentMobile").value = st.mobile || "";
+    document.getElementById("studentAddress").value = st.address || "";
+    editBtn.style.display = "none";
+  }
+}
+
+function editStudentDetails(){
+  let st = students[selectedStudentDetails];
+  document.getElementById("studentMobile").value = st.mobile || "";
+  document.getElementById("studentAddress").value = st.address || "";
+  document.getElementById("studentDetailsView").style.display = "none";
+  document.getElementById("studentDetailsForm").style.display = "block";
+  document.getElementById("studentDetailsEditBtn").style.display = "none";
+}
+
+function saveStudentDetails(){
+  let st = students[selectedStudentDetails];
+  st.mobile = document.getElementById("studentMobile").value.trim();
+  st.address = document.getElementById("studentAddress").value.trim();
+  localStorage.setItem("tuitionData", JSON.stringify(students));
+  document.getElementById("studentDetailsView").style.display = "block";
+  renderStudentDetails();
+}
+
+function toggleStudentActiveFromDetails(){
+  let st = students[selectedStudentDetails];
+  let action = st.active === false ? "activate" : "deactivate";
+  let message = action === "deactivate" ? `Mark ${st.name} as Inactive?\n\nThis student will stop appearing in Daily Attendance. Previous attendance and fee data will remain safe.` : `Mark ${st.name} as Active?\n\nThis student will appear again in Daily Attendance.`;
+  if(!confirm(message)) return;
+  st.active = action === "activate";
+  localStorage.setItem("tuitionData", JSON.stringify(students));
+  updateStudentActiveButton();
+  render();
+}
+
+function closeStudentDetails(){
+  document.getElementById("studentDetailsPopup").style.display = "none";
+  selectedStudentDetails = null;
+}
+
+function editStudent(index){
 
 let newName = prompt(
 "Edit Student Name",
@@ -988,200 +1115,113 @@ render();
 
 }
 function downloadPDF(index){
+  let s = students[index];
+  let selectedMonth = document.getElementById("reportMonth").value;
+  let selectedYear = document.getElementById("reportYear").value;
 
-let s = students[index];
+  let monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
 
-let selectedMonth =
-document.getElementById("reportMonth").value;
+  let reportHtml = `
+  <h1 style="color:#0d6efd;">Tuition Report</h1>
+  <h2>${s.name}</h2>
+  <p><b>Month :</b> ${monthNames[parseInt(selectedMonth)-1]}, ${selectedYear}</p>
+  <hr>`;
 
-let monthNames = [
-"January","February","March","April",
-"May","June","July","August",
-"September","October","November","December"
-];
+  let feeFound = false;
 
-let reportYear =
-new Date().getFullYear();
+  (s.fees || []).forEach(f=>{
+    let parts = f.date.split("-");
+    if(parts[0] === selectedYear && parts[1] === selectedMonth){
+      feeFound = true;
+      let formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      let previousMonthName = monthNames[(parseInt(selectedMonth)+10)%12];
 
-let reportHtml = "";
+      reportHtml += `
+      <h3>Fee Details</h3>
+      <p style="color:green;font-weight:bold;">${previousMonthName} Fee Paid ✓</p>
+      <p>₹${f.amount} via ${f.mode} on ${formattedDate}</p>
+      <hr>`;
+    }
+  });
 
-reportHtml += `
-<h1 style="color:#0d6efd;">
-Tuition Report
-</h1>
-
-<h2>${s.name}</h2>
-
-<p>
-<b>Month :</b>
-${monthNames[parseInt(selectedMonth)-1]},
-${reportYear}
-</p>
-
-<hr>
-`;
-
-let feeFound = false;
-
-s.fees.forEach(f=>{
-
-if(
-f.date.split("-")[1] === selectedMonth
-){
-
-feeFound = true;
-
-let parts = f.date.split("-");
-
-let formattedDate =
-`${parts[2]}/${parts[1]}/${parts[0]}`;
-
-let previousMonthName =
-monthNames[(parseInt(selectedMonth) + 10) % 12];
-
-reportHtml += `
-<h3>Fee Details</h3>
-
-<p style="
-color:green;
-font-weight:bold;
-">
-${previousMonthName} Fee Paid ✓
-</p>
-
-<p>
-₹${f.amount}
-via ${f.mode}
-on ${formattedDate}
-</p>
-
-<hr>
-`;
-}
-
-});
-
-if(!feeFound){
-
-reportHtml += `
-<h3>Fee Details</h3>
-<p>Pending</p>
-<hr>
-`;
-}
-
-reportHtml +=
-`<h3>Attendance</h3>`;
-let present = 0;
-let absent = 0;
-let leave = 0;
-let sunday = 0;
-let sundayManage = 0;
-let extraHoliday = 0;
-let foundAttendance = false;
-
-s.attendance.forEach(a=>{
-
-if(
-a.date.split("-")[1] === selectedMonth
-){
-
-foundAttendance = true;
-
-let day =
-a.date.split("-")[2];
-
-reportHtml += `
-<p>
-${day} - ${a.status.startsWith("EH|") ? a.status.split("|")[1] : a.status}
-</p>
-`;
-if(a.status=="Present"){
-present++;
-}
-else if(a.status=="Absent ❌"){
-absent++;
-}
-else if(a.status=="Leave"){
-leave++;
-}
-else if(a.status=="Sunday"){
-sunday++;
-}
-else if(a.status=="Sunday Manage ✅"){
-present++;
-sunday++;
-sundayManage++;
-}
-  else if(a.status.startsWith("EH|")){
-extraHoliday++;
+  if(!feeFound){
+    reportHtml += `<h3>Fee Details</h3><p>Pending</p><hr>`;
   }
-}
 
-});
-  if (sundayManage > 0) {
-    absent = Math.max(0, absent - sundayManage);
-  }
-reportHtml += `
-<div style="
-background:#d1ecf1;
-padding:10px;
-border-radius:8px;
-margin-top:15px;
-font-weight:bold;
-font-size:18px;
-">
-<span style="color:green">P : ${present}</span>
-|
-<span style="color:red">A : ${absent}</span>
-|
-<span style="color:purple">L : ${leave}</span>
-|
-<span style="color:blue">S : ${sunday}</span>
-${extraHoliday > 0 ? `| <span style="color:#ff8800">EH : ${extraHoliday}</span>` : ""}
+  reportHtml += `<h3>Attendance</h3>`;
+
+  let present=0, absent=0, leave=0, sunday=0, sundayManage=0, extraHoliday=0;
+  let foundAttendance=false;
+
+  (s.attendance || []).forEach(a=>{
+    let parts = a.date.split("-");
+    if(parts[0] === selectedYear && parts[1] === selectedMonth){
+      foundAttendance=true;
+      let day=parts[2];
+      let displayStatus=a.status.startsWith("EH|") ? a.status.split("|")[1] : a.status;
+
+      reportHtml += `<p>${day} - ${displayStatus}</p>`;
+
+      if(a.status=="Present") present++;
+      else if(a.status=="Absent ❌") absent++;
+      else if(a.status=="Leave") leave++;
+      else if(a.status=="Sunday") sunday++;
+      else if(a.status=="Sunday Manage ✅"){
+        present++; sunday++; sundayManage++;
+      }
+      else if(a.status.startsWith("EH|")) extraHoliday++;
+    }
+  });
+
+  absent=Math.max(0,absent-sundayManage);
+
+  reportHtml += `
+  <div style="background:#d1ecf1;padding:10px;border-radius:8px;margin-top:15px;font-weight:bold;font-size:18px;">
+    <span style="color:green">P : ${present}</span> |
+    <span style="color:red">A : ${absent}</span> |
+    <span style="color:purple">L : ${leave}</span> |
+    <span style="color:blue">S : ${sunday}</span>
+    ${extraHoliday>0 ? `| <span style="color:#ff8800">EH : ${extraHoliday}</span>` : ""}
+  </div>`;
+
+  if(!foundAttendance) reportHtml += `<p>No attendance found</p>`;
+
+  let reportWindow=window.open("","_blank");
+  reportWindow.document.write(`
+  <html><head>
+  <title>${s.name}_${monthNames[parseInt(selectedMonth)-1]}_${selectedYear}_Report</title>
+  </head>
+  <body style="font-family:Arial;padding:20px;">
+    <div style="text-align:right;margin-bottom:20px;">
+      <button onclick="window.print()" style="padding:10px 18px;background:#0d6efd;color:white;border:none;border-radius:8px;font-size:16px;cursor:pointer;">
+        Print Report
+      </button>
+    </div>
+    ${reportHtml}
+  
+<div class="card" style="text-align:center;">
+  <div style="font-weight:700;font-size:18px;">Tuition Attendance Manager</div>
+  <div style="margin-top:6px;font-size:13px;color:#666;">Developed by Aayush Kumar</div>
+  <div style="margin-top:10px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
+    <a href="whatsapp://send?phone=919279060820"
+       onclick="contactDeveloper(event)"
+       style="text-decoration:none;color:#25D366;font-weight:600;font-size:13px;">
+      📞 Contact Developer
+    </a>
+    <a href="mailto:aayushaniket1722@gmail.com"
+       style="text-decoration:none;color:#0d6efd;font-weight:600;font-size:13px;">
+      ✉️ Email
+    </a>
+  </div>
 </div>
-`;
 
-if(!foundAttendance){
-
-reportHtml += `
-<p>No attendance found</p>
-`;
+</body></html>`);
+  reportWindow.document.close();
 }
 
-let reportWindow =
-window.open("", "_blank");
-reportWindow.document.write(`
-<html>
-<head>
-<title>${s.name}_${monthNames[parseInt(selectedMonth)-1]}_Report</title>
-</head>
-<body style="
-font-family:Arial;
-padding:20px;
-">
-<div style="text-align:right;margin-bottom:20px;">
-<button
-onclick="window.print()"
-style="
-padding:10px 18px;
-background:#0d6efd;
-color:white;
-border:none;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
-">
-Print Report
-</button>
-</div>
-${reportHtml}
-</body>
-</html>
-`);
-reportWindow.document.close();
-
-}
 function checkLock(){
 
 let savedPin =
@@ -1288,7 +1328,43 @@ function changePin(){
 
 document.getElementById("menuPopup").style.display="none";
 
-alert("Coming in Step 4");
+let savedPin = localStorage.getItem("appPin");
+
+if(!savedPin){
+  alert("App Lock is not enabled. Please enable App Lock first.");
+  return;
+}
+
+let oldPin = prompt("Enter Current PIN");
+
+if(oldPin === null) return;
+
+if(oldPin !== savedPin){
+  alert("Wrong Current PIN");
+  return;
+}
+
+let newPin = prompt("Create New 4 Digit PIN");
+
+if(newPin === null) return;
+
+if(newPin.length !== 4 || isNaN(newPin)){
+  alert("PIN must be 4 digits");
+  return;
+}
+
+let confirmPin = prompt("Re-enter New PIN");
+
+if(confirmPin === null) return;
+
+if(confirmPin !== newPin){
+  alert("New PINs do not match");
+  return;
+}
+
+localStorage.setItem("appPin", newPin);
+
+alert("PIN Changed Successfully");
 
 }
 function backupData(){
@@ -1364,6 +1440,11 @@ return;
 }
 
 students = backup.students;
+students.forEach(s => {
+  if(!s.fees) s.fees=[];
+  if(!s.attendance) s.attendance=[];
+  if(typeof s.active !== "boolean") s.active=true;
+});
 
 localStorage.setItem(
 "tuitionData",
@@ -1418,7 +1499,29 @@ function deleteStudent(index){
   render();   
 }  
 }  
- </script>    <script>  
+ 
+function contactDeveloper(event){
+  event.preventDefault();
+
+  const phone = "9279060820";
+  const whatsappUrl = "whatsapp://send?phone=91" + phone;
+  const callUrl = "tel:" + phone;
+
+  // Try WhatsApp first. If WhatsApp is not installed, fall back to calling.
+  let fallback = setTimeout(function(){
+    window.location.href = callUrl;
+  }, 900);
+
+  window.location.href = whatsappUrl;
+
+  // If navigation succeeds, this page normally leaves the app;
+  // the timeout is cleared when the page becomes hidden.
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden) clearTimeout(fallback);
+  }, {once:true});
+}
+
+</script>    <script>  
 window.onload = function () {  
   let today = new Date();  
 document.getElementById("attDate").valueAsDate = today;  
@@ -1426,16 +1529,16 @@ checkSundayButton();
 
 document.getElementById("attDate")
 .addEventListener("change", checkSundayButton);
-document.getElementById("reportMonth").value =  
-    String(today.getMonth() + 1).padStart(2, "0");  
+document.getElementById("reportMonth").value =
+    String(today.getMonth() + 1).padStart(2, "0");
   let saved =  
     localStorage.getItem("tuitionData");  
   if(saved){
 students = JSON.parse(saved);
 students.forEach(s => {
-if(!s.fees){
-s.fees = [];
-}
+if(!s.fees) s.fees = [];
+if(!s.attendance) s.attendance = [];
+if(typeof s.active === "undefined") s.active = true;
 });
 
 render();
@@ -1461,5 +1564,22 @@ if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
   </script>
+
+<div class="card" style="text-align:center;">
+  <div style="font-weight:700;font-size:18px;">Tuition Attendance Manager</div>
+  <div style="margin-top:6px;font-size:13px;color:#666;">Developed by Aayush Kumar</div>
+  <div style="margin-top:10px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
+    <a href="whatsapp://send?phone=919279060820"
+       onclick="contactDeveloper(event)"
+       style="text-decoration:none;color:#25D366;font-weight:600;font-size:13px;">
+      📞 Contact Developer
+    </a>
+    <a href="mailto:aayushaniket1722@gmail.com"
+       style="text-decoration:none;color:#0d6efd;font-weight:600;font-size:13px;">
+      ✉️ Email
+    </a>
+  </div>
+</div>
+
 </body>  
 </html>
