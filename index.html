@@ -371,6 +371,9 @@ body{background:#f5f7fb;padding:0 0 78px;color:#182230;}
 .feeDetailsSectionTitle{font-size:15px;font-weight:800;margin:14px 0 8px;}
 .feeDetailRow{padding:9px 0;border-bottom:1px solid #edf0f4;}
 .feeDetailRow:last-child{border-bottom:0;}
+.feeDetailsPopupContent{max-height:calc(100vh - 24px)!important;overflow-y:auto!important;overflow-x:hidden;box-sizing:border-box;}
+.feeDetailsPopup{z-index:6000;}
+.feeDetailPeriod{display:block;white-space:nowrap;font-size:14px;line-height:1.25;}
 .feeCredited{color:#198754;font-weight:700;}
 .feePending{color:#b02a37;font-weight:700;}
 .feeStatusBlock{margin-top:5px;line-height:1.35;}
@@ -759,7 +762,7 @@ Reset PIN
 </div>
 
 <div class="popup" id="feePopup">
-  <div class="popupContent" style="max-height:90vh;overflow:auto;">
+  <div class="popupContent feeDetailsPopupContent">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
       <h3 id="feeUpdateTitle" style="margin:0;"></h3>
       <button onclick="closeFeePopup()" style="border:none;background:none;font-size:22px;font-weight:bold;">✕</button>
@@ -797,7 +800,7 @@ Reset PIN
     <button class="popupSave" onclick="saveFee()">Save Fee</button>
   </div>
 </div>
-<div class="popup" id="feeStatusPopup">
+<div class="popup feeDetailsPopup" id="feeStatusPopup">
   <input type="date" id="joiningDatePicker" aria-label="Tuition Joining Date" onchange="saveJoiningDateFromPicker(this.value)" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;">
   <div class="popupContent" style="max-height:90vh;overflow:auto;">
     <div style="display:flex;justify-content:flex-end;align-items:center;">
@@ -2264,9 +2267,9 @@ function renderFeeDetails(st){
       hasCredited=true;
       const paymentDate=rec.date ? formatFeeDate(rec.date) : '';
       const mode=rec.mode || 'Mode not set';
-      rows+=`<div class="feeDetailRow" style="position:relative;padding-right:52px;"><b>${item.label}</b><br><span class="feeCredited">Credited</span> · ₹${amount}<br><span style="color:#606775;font-size:13px;">${paymentDate} · ${mode}</span><button class="miniBtn red" style="position:absolute;right:0;top:50%;transform:translateY(-50%);" onclick="deleteFeeRecord(${st.fees.indexOf(rec)})">🗑️</button></div>`;
+      rows+=`<div class="feeDetailRow" style="position:relative;padding-right:52px;"><b class="feeDetailPeriod">${item.label}</b><br><span class="feeCredited">Credited</span> · ₹${amount}<br><span style="color:#606775;font-size:13px;">${paymentDate} · ${mode}</span><button class="miniBtn red" style="position:absolute;right:0;top:50%;transform:translateY(-50%);" onclick="deleteFeeRecord(${st.fees.indexOf(rec)})">🗑️</button></div>`;
     }else{
-      rows+=`<div class="feeDetailRow" style="position:relative;padding-right:52px;"><b>${item.label}</b><br><span class="feePending">Pending</span>${amount ? ` · ₹${amount}` : ''}</div>`;
+      rows+=`<div class="feeDetailRow" style="position:relative;padding-right:52px;"><b class="feeDetailPeriod">${item.label}</b><br><span class="feePending">Pending</span>${amount ? ` · ₹${amount}` : ''}</div>`;
     }
   });
 
