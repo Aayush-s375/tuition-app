@@ -1517,6 +1517,7 @@ function renderStudentsPage(){
   const query=(document.getElementById('studentSearchInput')?.value || '').trim().toLowerCase();
   const activeList=query ? active.filter(s=>(s.name||'').toLowerCase().includes(query)) : active;
   const inactiveList=query ? inactive.filter(s=>(s.name||'').toLowerCase().includes(query)) : inactive;
+  if(inactive.length===0) showPreviousStudents=false;
 
   const renderStudentList=(list)=>list.map((s)=>{
     const index=students.indexOf(s);
@@ -1548,7 +1549,7 @@ function renderStudentsPage(){
       html=renderStudentList(activeList);
     }
 
-    if(inactive.length){
+    if(inactive.length > 0){
       html+=`<button class="previousStudentsBtn" onclick="showPreviousStudents=!showPreviousStudents; renderStudentsPage();">
         ${showPreviousStudents?'Hide Previous Students':'Previous Students'}
       </button>`;
@@ -1820,6 +1821,7 @@ function renderFeesPage(){
 
   const active=students.filter(s=>s.active!==false);
   const inactive=students.filter(s=>s.active===false);
+  if(inactive.length===0) showPreviousFees=false;
 
   const renderFeeStudents=(list)=>list.map((s)=>{
     const index=students.indexOf(s);
@@ -1845,7 +1847,7 @@ function renderFeesPage(){
     html=renderFeeStudents(active);
   }
 
-  if(inactive.length){
+  if(inactive.length > 0){
     html+=`<button class="previousStudentsBtn" onclick="showPreviousFees=!showPreviousFees; renderFeesPage();">
       ${showPreviousFees?'Hide Previous Students':'Previous Students'}
     </button>`;
@@ -2042,6 +2044,7 @@ function renderReports(){
   const selectedYear = document.getElementById("reportYear").value;
   const activeReportStudents = students.filter(s=>s.active!==false).map(s=>({s,index:students.indexOf(s)}));
   const inactiveReportStudents = students.filter(s=>s.active===false).map(s=>({s,index:students.indexOf(s)}));
+  if(inactiveReportStudents.length===0) showPreviousReports=false;
   const reportStudents = showPreviousReports ? [...activeReportStudents,...inactiveReportStudents] : activeReportStudents;
 
   if(activeReportStudents.length===0 && inactiveReportStudents.length===0){
@@ -2051,7 +2054,7 @@ function renderReports(){
 
   if(activeReportStudents.length===0){
     let emptyHtml=`<div class="modernPanel"><p style="text-align:center;margin:6px 0 12px;">No active students</p>`;
-    if(inactiveReportStudents.length){
+    if(inactiveReportStudents.length > 0){
       emptyHtml+=`<button class="previousStudentsBtn" onclick="showPreviousReports=!showPreviousReports; reportSlideIndex=0; renderReports();">${showPreviousReports?'Hide Previous Students':'Previous Students'}</button>`;
       if(showPreviousReports) emptyHtml+=`<div class="previousStudentsTitle">Previous Students</div>`;
     }
@@ -2165,7 +2168,7 @@ function renderReports(){
     </div>
     <div class="reportSwipeHint">Swipe left/right to change student</div>
     <div class="modernPanel" style="padding:10px 0 0;box-shadow:none;background:transparent;">
-      ${inactiveReportStudents.length ? `<button class="previousStudentsBtn" onclick="showPreviousReports=!showPreviousReports; reportSlideIndex=0; renderReports();">${showPreviousReports?'Hide Previous Students':'Previous Students'}</button>` : ''}
+      ${inactiveReportStudents.length > 0 ? `<button class="previousStudentsBtn" onclick="showPreviousReports=!showPreviousReports; reportSlideIndex=0; renderReports();">${showPreviousReports?'Hide Previous Students':'Previous Students'}</button>` : ''}
     </div>`;
 
   setupReportSwipe();
