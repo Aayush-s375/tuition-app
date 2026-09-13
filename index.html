@@ -1261,6 +1261,18 @@ async function syncWithGoogleDrive() {
     const driveBackup = await readDriveData(driveFile.id);
     const driveUpdatedAt = Number(driveBackup?.updatedAt || 0);
 
+    // A local change may happen while the Drive request is in progress
+    // (for example, deleting a fee record). Never let an older Drive read
+    // overwrite that newer local change.
+    const latestLocalMeta = getSyncMeta();
+    const latestLocalUpdatedAt = Number(latestLocalMeta.updatedAt || 0);
+    if (latestLocalUpdatedAt > localUpdatedAt) {
+      setSyncMeta({...latestLocalMeta, pending:true});
+      setDriveSyncStatus("New changes pending — syncing…", "working");
+      scheduleDriveSync();
+      return;
+    }
+
     // If local changes are newer, upload them. If Drive is newer, download them.
     if (localUpdatedAt > driveUpdatedAt) {
       const backup = {
@@ -1274,8 +1286,19 @@ async function syncWithGoogleDrive() {
       };
 
       await uploadDriveData(backup, driveFile.id);
-      setSyncMeta({updatedAt: localUpdatedAt, pending: false, driveFileId: driveFile.id});
-      setDriveSyncStatus("Synced with Google Drive", "ok");
+
+      // If another local change happened during the upload, keep it pending
+      // instead of marking the newer change as already synced.
+      const afterUploadMeta = getSyncMeta();
+      const afterUploadUpdatedAt = Number(afterUploadMeta.updatedAt || 0);
+      if (afterUploadUpdatedAt > localUpdatedAt) {
+        setSyncMeta({...afterUploadMeta, pending:true, driveFileId:driveFile.id});
+        setDriveSyncStatus("New changes pending — syncing…", "working");
+        scheduleDriveSync();
+      } else {
+        setSyncMeta({updatedAt:localUpdatedAt, pending:false, driveFileId:driveFile.id});
+        setDriveSyncStatus("Synced with Google Drive", "ok");
+      }
     } else if (driveUpdatedAt > localUpdatedAt) {
       if (Array.isArray(driveBackup.students)) {
         students = driveBackup.students;
@@ -1666,30 +1689,19 @@ function subtractFeeRange(baseStart,baseEnd,cutStart,cutEnd){
 }
 
 function getEffectiveCreditedRanges(student){
-  const effective=[];
-  getCreditedFeeRecords(student).forEach(({rec,index})=>{
+  // Every saved credited fee period remains its own record.
+  // Records are never trimmed or replaced here. Overlapping periods are
+  // blocked when saving a new period, so existing saved periods stay intact.
+  return getCreditedFeeRecords(student).map(({rec,index})=>{
     const range=getCreditedRange(rec,student);
-    if(!range) return;
-
-    // The newest saved fee update wins wherever it overlaps an older one.
-    // Remove the new range from all older effective ranges first.
-    let remaining=[];
-    effective.forEach(item=>{
-      remaining.push(...subtractFeeRange(item.start,item.end,range.start,range.end));
-    });
-
-    remaining.push({
+    if(!range) return null;
+    return {
       start:range.start,
       end:range.end,
       record:rec,
       recordIndex:index
-    });
-
-    effective.length=0;
-    effective.push(...remaining);
-  });
-
-  return effective.sort((a,b)=>{
+    };
+  }).filter(Boolean).sort((a,b)=>{
     const d=String(a.start).localeCompare(String(b.start));
     if(d) return d;
     return String(a.end).localeCompare(String(b.end));
