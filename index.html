@@ -1508,16 +1508,15 @@ function renderStudentsPage(){
   const active=students.filter(s=>s.active!==false);
   const inactive=students.filter(s=>s.active===false);
   const query=(document.getElementById('studentSearchInput')?.value || '').trim().toLowerCase();
-  const listBase=studentsShowPrevious ? inactive : active;
-  const list=query ? listBase.filter(s=>(s.name||'').toLowerCase().includes(query)) : listBase;
+  const allList=[...active,...inactive];
+  const list=query ? allList.filter(s=>(s.name||'').toLowerCase().includes(query)) : allList;
   let html='';
-
   if(!students.length){
     html='<div class="emptyState"><div style="font-size:38px;margin-bottom:8px;">👨‍🎓</div><b>No students yet</b><div style="margin-top:5px;">Tap + at the top to add your first student.</div></div>';
   }else if(!list.length){
     html='<div class="emptyState"><div style="font-size:34px;margin-bottom:8px;">🔎</div><b>No student found</b><div style="margin-top:5px;">No student matches “'+escapeHtml(query)+'”.</div></div>';
   }else{
-    html=list.map((s)=>{
+    const listHtml=list.map((s)=>{
       const index=students.indexOf(s);
       const initial=(s.name||'?').trim().charAt(0).toUpperCase();
       const avatarContent=s.photo
@@ -1534,14 +1533,11 @@ function renderStudentsPage(){
         </div>
       </div>`;
     }).join('');
-  }
-
-  if(inactive.length){
-    html += `<button class="feeBtn" onclick="togglePreviousStudents('students')" style="width:100%;margin-top:10px;">${studentsShowPrevious?'Hide Previous Students':'Previous Students'}</button>`;
+    html=listHtml;
   }
   area.innerHTML=html;
   const count=document.getElementById('studentCountText');
-  if(count) count.textContent=`${active.length} active${inactive.length?' · '+inactive.length+' previous':''}`;
+  if(count) count.textContent=`${active.length} active${students.length!==active.length?' · '+(students.length-active.length)+' inactive':''}`;
 }
 
 function feeDateObj(date){
@@ -1791,17 +1787,12 @@ function feeItemKey(item){
 function renderFeesPage(){
   const area=document.getElementById('feesArea');
   if(!area) return;
-  const active=students.filter(s=>s.active!==false);
-  const inactive=students.filter(s=>s.active===false);
-  const list=feesShowPrevious ? inactive : active;
-
   if(!students.length){
     area.innerHTML='<div class="emptyState"><div style="font-size:38px;margin-bottom:8px;">₹</div><b>No students yet</b><div style="margin-top:5px;">Add a student first.</div></div>';
     return;
   }
-
-  let html=list.map((s)=>{
-    const index=students.indexOf(s);
+  let html='';
+  students.forEach((s,index)=>{
     if(!s.fees) s.fees=[];
     const items=getCurrentFeeDisplayItems(s);
     let feeLines='';
@@ -1810,19 +1801,12 @@ function renderFeesPage(){
     }else{
       feeLines=items.map(item=>`<div class="feeStatusBlock">${feeItemStatusText(item,s)}</div>`).join('');
     }
-    return `<div class="modernStudent" onclick="openFeeStatus(${index})" style="cursor:pointer;">
+    html+=`<div class="modernStudent" onclick="openFeeStatus(${index})" style="cursor:pointer;">
       <div class="avatar" style="background:#fff4df;color:#e58b00;">₹</div>
       <div class="studentMain"><b>${s.name}</b>${feeLines}</div>
       <button class="miniBtn" onclick="event.stopPropagation();openFee(${index})">Update</button>
     </div>`;
-  }).join('');
-
-  if(!list.length){
-    html='<div class="emptyState"><b>No previous students</b></div>';
-  }
-  if(inactive.length){
-    html += `<button class="feeBtn" onclick="togglePreviousStudents('fees')" style="width:100%;margin-top:10px;">${feesShowPrevious?'Hide Previous Students':'Previous Students'}</button>`;
-  }
+  });
   area.innerHTML=html;
 }
 
@@ -1998,10 +1982,6 @@ function populateReportYears(){
 }
 
 let reportSlideIndex = 0;
-let studentsShowPrevious = false;
-let feesShowPrevious = false;
-let reportsShowPrevious = false;
-let previousReportStudentIndex = null;
 
 function renderReports(){
   const reportArea = document.getElementById("reportArea");
@@ -2012,22 +1992,24 @@ function renderReports(){
 
   const selectedMonth = document.getElementById("reportMonth").value;
   const selectedYear = document.getElementById("reportYear").value;
-  const activeReportStudents = students.map((s,index)=>({s,index})).filter(item=>item.s.active!==false);
-  const inactiveReportStudents = students.map((s,index)=>({s,index})).filter(item=>item.s.active===false);
-  const reportStudents = activeReportStudents;
-
-  if(reportStudents.length===0 && inactiveReportStudents.length===0){
-    reportArea.innerHTML=`<div class="modernPanel"><p style="text-align:center;">No students found</p></div>`;
-    return;
-  }
+  const reportStudents = students.map((s,index)=>({s,index}));
 
   if(reportStudents.length===0){
-    reportArea.innerHTML=`<div class="modernPanel" style="padding:12px;"><p style="text-align:center;margin:4px 0;">No active students</p></div>${inactiveReportStudents.length?`<button class="feeBtn" onclick="togglePreviousStudents('reports')" style="width:100%;margin-top:10px;">Previous Students</button>`:''}`;
+    reportArea.innerHTML=`<div class="modernPanel"><p style="text-align:center;">No students found</p></div>`;
     return;
   }
 
   if(reportSlideIndex < 0) reportSlideIndex=0;
   if(reportSlideIndex >= reportStudents.length) reportSlideIndex=reportStudents.length-1;
+
+  const monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+  const monthName = monthNames[Number(selectedMonth)-1] || selectedMonth;
+  const selectedKey=`${selectedYear}-${String(selectedMonth).padStart(2,'0')}`;
+  const monthStart=`${selectedKey}-01`;
+  const monthEnd=`${selectedKey}-${String(new Date(Number(selectedYear),Number(selectedMonth),0).getDate()).padStart(2,'0')}`;
 
   let slidesHtml = "";
 
@@ -2090,20 +2072,53 @@ function renderReports(){
       }
     });
 
-    if(attendanceHtml==="") attendanceHtml="<p>No attendance found</p>";
+    if(attendanceHtml==="") attendanceHtml='<p style="text-align:center;color:#666;">No attendance found</p>';
+
+    const feeItems=getFeeStatusItems(s,monthEnd).filter(item=>{
+      const start=feeDateObj(item.start), end=feeDateObj(item.end);
+      return start && end && start<=feeDateObj(monthEnd) && end>=feeDateObj(monthStart);
+    }).sort((a,b)=>String(a.start||'').localeCompare(String(b.start||'')));
+
+    const hasCredited=feeItems.some(item=>item.record?.status==='credited');
+    let feeHtml = "";
+    if(feeItems.length){
+      feeItems.forEach(item=>{
+        const rec=item.record;
+        const amount=Number(rec?.amount || getKnownFeeAmount(s) || 0);
+        if(rec?.status==='credited'){
+          const paymentDate=rec.date ? formatFeeDate(rec.date) : '';
+          feeHtml += `<div style="padding:9px 0;border-bottom:1px solid #edf0f4;"><b>${item.label}</b><br><span style="color:#198754;font-weight:700;">Credited</span> ₹${amount} via ${rec.mode||'Mode not set'} on ${paymentDate}</div>`;
+        }else{
+          feeHtml += `<div style="padding:9px 0;border-bottom:1px solid #edf0f4;"><b>${item.label}</b><br><span style="color:#b02a37;font-weight:700;">Pending</span>${amount ? ` · ₹${amount}` : ''}</div>`;
+        }
+      });
+    }else{
+      feeHtml = `<div style="padding:9px 0;color:#666;">Pending</div>`;
+    }
 
     slidesHtml += `
     <div class="student reportSlide ${slideIndex===reportSlideIndex?'active':''}" data-report-slide="${slideIndex}">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;">
         <h3 style="color:#0d6efd;font-weight:700;font-size:20px;margin:0;cursor:pointer;text-decoration:underline;" onclick="openStudentDetails(${index})">${s.name}</h3>
         <button class="feeBtn" onclick="downloadPDF(${index})" style="padding:7px 10px;min-width:0;white-space:nowrap;">Print Report</button>
       </div>
 
+      <div style="font-size:13px;color:#606775;margin-bottom:4px;"><b>Month :</b> ${monthName}, ${selectedYear}</div>
+      <hr style="border:0;border-top:1px solid #e1e4ea;margin:10px 0 14px;">
+
+      <div style="font-size:15px;font-weight:800;margin:0 0 8px;">Fee Details</div>
+      ${hasCredited ? `<div style="color:green;font-weight:700;margin:0 0 8px;">Fee Collected ✓</div>` : ""}
+      ${feeHtml}
+
+      <div style="font-size:15px;font-weight:800;margin:16px 0 8px;">Attendance</div>
       ${attendanceHtml}
 
       <div class="summary">
-        P : ${present} | A : ${absent} | L : ${leave} | S : ${sunday}
-        ${extraHoliday > 0 ? `| EH : ${extraHoliday}` : ""}
+        <span style="color:green;font-weight:700;">P : ${present}</span> |
+        <span style="color:red;font-weight:700;">A : ${absent}</span> |
+        <span style="color:purple;font-weight:700;">L : ${leave}</span> |
+        <span style="color:blue;font-weight:700;">S : ${sunday}</span>
+        ${extraHoliday > 0 ? `| <span style="color:#ff8800;font-weight:700;">EH : ${extraHoliday}</span>` : ""}
       </div>
     </div>`;
   });
@@ -2111,19 +2126,6 @@ function renderReports(){
   const optionsHtml = reportStudents.map((item,i)=>
     `<option value="${i}" ${i===reportSlideIndex?'selected':''}>${i+1} — ${item.s.name}</option>`
   ).join("");
-
-  let previousHtml='';
-  if(inactiveReportStudents.length){
-    previousHtml=`<button class="feeBtn" onclick="togglePreviousStudents('reports')" style="width:100%;margin-top:12px;">${reportsShowPrevious?'Hide Previous Students':'Previous Students'}</button>`;
-    if(reportsShowPrevious){
-      previousHtml += `<div class="modernPanel" style="margin-top:10px;padding:10px;">`;
-      previousHtml += inactiveReportStudents.map(item=>`<div class="modernStudent" style="margin-bottom:8px;">
-        <div class="studentMain"><b>${item.s.name}</b><div class="studentMeta">Previous Student</div></div>
-        <button class="miniBtn" onclick="showPreviousReport(${item.index})">View</button>
-      </div>`).join('');
-      previousHtml += `</div>`;
-    }
-  }
 
   reportArea.innerHTML = `
     <div class="reportSlider" id="reportSlider">
@@ -2137,89 +2139,10 @@ function renderReports(){
       <span style="font-weight:700;color:#555;">/ ${reportStudents.length}</span>
       <button class="reportSlideBtn" onclick="changeReportSlide(1)" aria-label="Next student">›</button>
     </div>
-    <div class="reportSwipeHint">Swipe left/right to change student</div>${previousHtml}`;
+    <div class="reportSwipeHint">Swipe left/right to change student</div>`;
 
   setupReportSwipe();
 }
-
-function togglePreviousStudents(section){
-  if(section==='students'){
-    studentsShowPrevious=!studentsShowPrevious;
-    const input=document.getElementById('studentSearchInput');
-    if(input) input.value='';
-    renderStudentsPage();
-    return;
-  }
-  if(section==='fees'){
-    feesShowPrevious=!feesShowPrevious;
-    renderFeesPage();
-    return;
-  }
-  if(section==='reports'){
-    reportsShowPrevious=!reportsShowPrevious;
-    renderReports();
-  }
-}
-
-function showPreviousReport(index){
-  const s=students[index];
-  if(!s || s.active!==false) return;
-  // Open the selected previous student's report using the existing report view.
-  const activeCount=students.filter(st=>st.active!==false).length;
-  const previousList=students.map((st,i)=>({st,i})).filter(x=>x.st.active===false);
-  const pos=previousList.findIndex(x=>x.i===index);
-  if(pos<0) return;
-  previousReportStudentIndex=index;
-  reportsShowPrevious=true;
-  reportSlideIndex=0;
-  renderPreviousReportOnly(index);
-}
-
-function renderPreviousReportOnly(index){
-  const reportArea=document.getElementById('reportArea');
-  const s=students[index];
-  if(!reportArea || !s) return;
-  const selectedMonth=document.getElementById('reportMonth')?.value || String(new Date().getMonth()+1).padStart(2,'0');
-  const selectedYear=document.getElementById('reportYear')?.value || String(new Date().getFullYear());
-  if(!s.attendance) s.attendance=[];
-  if(!s.fees) s.fees=[];
-  let present=0,absent=0,leave=0,sunday=0,extraHoliday=0,sundayManage=0;
-  s.attendance.forEach(a=>{
-    const parts=a.date.split('-');
-    if(parts[0]===selectedYear && parts[1]===selectedMonth){
-      if(a.status==='Present') present++;
-      else if(a.status==='Sunday') sunday++;
-      else if(a.status==='Sunday Manage ✅'){present++;sunday++;sundayManage++;}
-      else if(a.status==='Absent ❌') absent++;
-      else if(a.status==='Leave') leave++;
-      else if(a.status.startsWith('EH|')) extraHoliday++;
-    }
-  });
-  absent=Math.max(0,absent-sundayManage);
-  let attendanceHtml='';
-  [...s.attendance].sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(a=>{
-    const parts=a.date.split('-');
-    if(parts[0]===selectedYear && parts[1]===selectedMonth){
-      const displayStatus=a.status.startsWith('EH|')?a.status.split('|').slice(1).join('|'):a.status;
-      const safeDate=a.date.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-      attendanceHtml+=`<p onclick="openAttendanceStatus(${index},'${safeDate}')" style="width:220px;margin:auto;text-align:left;font-weight:600;cursor:pointer;padding:3px 0;">${parts[2]} - ${displayStatus}</p>`;
-    }
-  });
-  if(!attendanceHtml) attendanceHtml='<p>No attendance found</p>';
-  reportArea.innerHTML=`
-    <div class="reportSlider"><div class="student reportSlide active">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
-        <h3 style="color:#0d6efd;font-weight:700;font-size:20px;margin:0;cursor:pointer;text-decoration:underline;" onclick="openStudentDetails(${index})">${s.name}</h3>
-        <button class="feeBtn" onclick="downloadPDF(${index})" style="padding:7px 10px;min-width:0;white-space:nowrap;">Print Report</button>
-      </div>
-      ${attendanceHtml}
-      <div class="summary">P : ${present} | A : ${absent} | L : ${leave} | S : ${sunday}${extraHoliday>0?` | EH : ${extraHoliday}`:''}</div>
-    </div></div>
-    <div class="reportSlideNav"><button class="reportSlideBtn" onclick="renderReports()">‹</button><span style="font-weight:700;color:#555;">Previous Student</span><button class="reportSlideBtn" onclick="renderReports()">›</button></div>
-    <div class="reportSwipeHint">Previous Student</div>
-    <button class="feeBtn" onclick="renderReports();setTimeout(()=>{reportsShowPrevious=true;renderReports();},0)" style="width:100%;margin-top:10px;">Back to Previous Students</button>`;
-}
-
 function changeReportSlide(direction){
   const total = document.querySelectorAll("#reportSlider .reportSlide").length;
   if(!total) return;
@@ -2403,8 +2326,7 @@ function renderFeeDetails(st){
   },0);
 
   const cycleText=getFeeCycleMode(st)==='month'?'Calendar Month':'Fee Period';
-  const collectedHeading=hasCredited ? '<div style="color:green;font-weight:700;margin:8px 0 10px;">Fee Collected ✓</div>' : '';
-  content.innerHTML=`<div class="feeDetailsName">${st.name}</div><div class="feeDetailsJoining"><b>Tuition Joining Date:</b> ${formatFeeShortDate(st.joiningDate)} <button class="miniBtn" style="margin-left:6px;padding:5px 8px;" onclick="editJoiningDate()">Edit</button></div><div class="feeDetailsSectionTitle">Monthly Details</div><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><select id="feeDetailsYear" onchange="renderFeeDetails(students[currentStudent])" style="margin:0;flex:1;"></select><span style="font-size:12px;color:#606775;">${cycleText}</span></div>${collectedHeading}${rows}<div style="border-top:1px solid #dfe3eb;margin-top:12px;padding-top:12px;text-align:center;font-size:15px;font-weight:700;color:#202638;">${year} • Total Collections - ₹${totalCollections}</div>`;
+  content.innerHTML=`<div class="feeDetailsName">${st.name}</div><div class="feeDetailsJoining"><b>Tuition Joining Date:</b> ${formatFeeShortDate(st.joiningDate)} <button class="miniBtn" style="margin-left:6px;padding:5px 8px;" onclick="editJoiningDate()">Edit</button></div><div class="feeDetailsSectionTitle">Monthly Details</div><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><select id="feeDetailsYear" onchange="renderFeeDetails(students[currentStudent])" style="margin:0;flex:1;"></select><span style="font-size:12px;color:#606775;">${cycleText}</span></div>${rows}<div style="border-top:1px solid #dfe3eb;margin-top:12px;padding-top:12px;text-align:center;font-size:15px;font-weight:700;color:#202638;">${year} • Total Collections - ₹${totalCollections}</div>`;
 
   const ys=document.getElementById('feeDetailsYear');
   if(ys){
