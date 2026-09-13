@@ -3,7 +3,8 @@
 <meta charset="UTF-8">  
 <meta name="viewport" content="width=device-width, initial-scale=1.0">  
 <title>Tuition Attendance Manager</title> <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#0d6efd"> <style>  
+<meta name="theme-color" content="#0d6efd">
+  <script src="https://accounts.google.com/gsi/client" async defer></script><style>  
   
 
 
@@ -157,7 +158,7 @@ border-radius:8px;
 position:relative;
 display:inline-block;
 width:46px;
-height:24px;
+height:28px;
 }
 
 .switch input{
@@ -172,20 +173,24 @@ left:0;
 right:0;
 bottom:0;
 background:#dc3545;
-border-radius:24px;
+border-radius:7px;
 transition:.3s;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:16px;
+line-height:1;
+box-sizing:border-box;
 }
 
 .slider:before{
-position:absolute;
-content:"";
-height:18px;
-width:18px;
-left:3px;
-bottom:3px;
-background:white;
-border-radius:50%;
-transition:.3s;
+content:"🔓";
+position:static;
+height:auto;
+width:auto;
+background:transparent;
+border-radius:0;
+transition:none;
 }
 
 .switch input:checked + .slider{
@@ -193,11 +198,253 @@ background:#28a745;
 }
 
 .switch input:checked + .slider:before{
-transform:translateX(22px);
+content:"🔒";
+transform:none;
 }
-  
+
+body:not(.googleLoggedIn) > *:not(#googleLogin):not(script):not(#lockScreen){
+    display:none !important;
+}
+
+#googleLogin{
+    position:fixed !important;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    margin:0 !important;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#f3f5f7;
+    z-index:999999;
+}
+
+.googleLoginBox{
+    width:90%;
+    max-width:380px;
+    background:white;
+    padding:38px 25px;
+    border-radius:24px;
+    box-shadow:0 12px 35px rgba(0,0,0,.15);
+    text-align:center;
+    border:1px solid rgba(255,255,255,.8);
+}
+
+.googleLoginBox::before{
+    content:"✓";
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:70px;
+    height:70px;
+    margin:0 auto 18px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#0d6efd,#6f42c1);
+    color:white;
+    font-size:38px;
+    font-weight:bold;
+    box-shadow:0 8px 20px rgba(13,110,253,.3);
+}
+
+.googleLoginBox h2{
+    margin:0 0 10px;
+    font-size:27px;
+    font-weight:bold;
+}
+
+.googleLoginBox p{
+    margin:0 0 25px;
+    color:#777;
+    font-size:16px;
+}
+
+#googleButton{
+    display:flex;
+    justify-content:center;
+  }
+    
+
+/* ===== Modern Dashboard Redesign ===== */
+/* Menu rows: icon + text, with the entire row clickable */
+/* Student search */
+.studentSearchPanel{padding:12px!important;}
+.searchWrap{display:flex;align-items:center;gap:9px;border:1px solid #e1e5ee;border-radius:12px;background:#fff;padding:0 12px;min-height:44px;box-sizing:border-box;}
+.searchIcon{font-size:17px;line-height:1;}
+.searchWrap input{border:0;outline:0;background:transparent;width:100%;font-size:15px;color:#202638;padding:10px 0;}
+.searchWrap input::placeholder{color:#9aa3b2;}
+
+/* Developer popup */
+.developerPopupContent{text-align:center;position:relative;padding:25px 20px 22px!important;}
+.developerPopupIcon{font-size:42px;margin:2px 0 8px;}
+.developerPopupContent h3{margin:0 0 7px;font-size:19px;color:#202638;}
+.developerPopupByline{margin:0 0 20px;color:#667085;font-size:14px;}
+.developerEmailBtn{display:block;margin-top:10px;padding:11px 14px;border:1px solid #dfe3eb;border-radius:10px;text-decoration:none;color:#202638;background:#fff;font-weight:700;font-size:14px;}
+
+.modernMenuPopup{
+  min-width:260px!important;
+  right:0!important;
+  top:48px!important;
+  border-radius:14px!important;
+  overflow:hidden;
+  color:#202638!important;
+}
+.modernMenuPopup .modernMenuItem{
+  min-height:52px;
+  box-sizing:border-box;
+  padding:11px 14px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:12px;
+  border-bottom:1px solid #eee;
+  cursor:pointer!important;
+  color:#202638!important;
+  background:#fff;
+  font-size:15px!important;
+  font-weight:700;
+  text-align:left;
+}
+.modernMenuPopup .modernMenuItem:active{background:#f2f4ff;}
+.modernMenuProfile{min-height:58px;box-sizing:border-box;padding:10px 12px 10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #eee;background:#fff;}
+.modernMenuProfileName{min-width:0;display:flex;align-items:center;gap:12px;font-size:15px;font-weight:700;color:#202638;}
+.modernMenuProfileName #ownerNameDisplay{min-width:0;max-width:185px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ownerEditBtn{width:34px;height:34px;flex:0 0 34px;border:0;border-radius:9px;background:#eef2ff;color:#3947a7;font-size:21px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.ownerEditBtn:active{background:#dde3ff;}
+.modernMenuIcon{width:30px;min-width:30px;text-align:center;font-size:22px;line-height:1;}
+.modernMenuLabel{flex:1;color:#202638!important;display:block!important;}
+.modernMenuPopup .menuLockItem{padding-right:10px!important;}
+.modernMenuPopup .menuLockSwitch{margin:0 0 0 auto!important;flex:0 0 46px;}
+.modernMenuAccount{padding:10px 14px!important;background:#fafbfe;color:#657080;font-size:11px;line-height:1.5;display:flex;flex-direction:column;gap:2px;}
+.modernMenuAccount #googleEmailDisplay{color:#4b5563;font-weight:600;word-break:break-all;}
+.modernMenuAccount #driveSyncStatus{color:#16a36a;font-weight:600;}
+
+body{background:#f5f7fb;padding:0 0 78px;color:#182230;}
+.appShell{max-width:720px;margin:0 auto;padding:14px 14px 24px;}
+.appHeader{background:linear-gradient(135deg,#263b8f,#5b4bd8);color:#fff;border-radius:20px;padding:18px 18px 20px;box-shadow:0 8px 24px rgba(39,55,145,.22);position:relative;overflow:visible;}
+.appHeaderTop{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.appTitle{font-size:23px;font-weight:800;line-height:1.1;}
+.appSubtitle{font-size:13px;opacity:.82;margin-top:5px;}
+.headerActions{display:flex;align-items:center;gap:5px;}
+.headerIconBtn{width:40px;height:40px;border:0;border-radius:12px;background:rgba(255,255,255,.15);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.headerAdd{font-size:27px;font-weight:400;}
+#menuPopup{right:0!important;top:48px!important;min-width:215px!important;border-radius:14px!important;overflow:hidden;}
+#menuPopup>div{padding:13px 15px!important;}
+.menuLockRow{display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:1px solid #eee;font-size:14px;font-weight:700;}
+.menuLockSwitch{flex:0 0 46px;}
+.section{display:none;animation:sectionIn .18s ease;}
+.section.active{display:block;}
+@keyframes sectionIn{from{opacity:.6;transform:translateY(4px)}to{opacity:1;transform:none}}
+.dashboardWelcome{padding:22px 3px 13px;}
+.dashboardWelcome h2{font-size:20px;margin:0 0 4px;}
+.dashboardWelcome p{margin:0;color:#6b7280;font-size:14px;}
+.featureGrid{display:grid;grid-template-columns:1fr 1fr;gap:13px;}
+.featureCard{border:0;border-radius:18px;padding:18px 16px;min-height:128px;text-align:left;color:#fff;box-shadow:0 7px 18px rgba(20,30,60,.12);cursor:pointer;position:relative;overflow:hidden;}
+.featureCard:active{transform:scale(.98);}
+.featureIcon{font-size:30px;margin-bottom:12px;display:block;}
+.featureCard h3{margin:0;font-size:17px;}
+.featureCard p{margin:5px 0 0;font-size:13px;opacity:.88;}
+.cardStudents{background:linear-gradient(135deg,#17a65b,#28c76f)}
+.cardAttendance{background:linear-gradient(135deg,#1769d2,#3c8bea)}
+.cardFees{background:linear-gradient(135deg,#ed9216,#f5b52e)}
+.cardReports{background:linear-gradient(135deg,#7542cf,#9865e8)}
+.quickBox{margin-top:18px;background:#fff;border-radius:18px;padding:15px;box-shadow:0 3px 14px rgba(20,30,60,.07);}
+.quickTitle{font-size:14px;font-weight:800;margin-bottom:11px;}
+.quickGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.quickBtn{border:1px solid #e7eaf0;background:#f8f9fc;border-radius:12px;padding:12px 10px;font-weight:700;color:#303746;cursor:pointer;}
+.pageHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:20px 2px 13px;}
+.pageHead h2{margin:0;font-size:21px;}
+.pageHead p{margin:4px 0 0;color:#6b7280;font-size:13px;}
+.backHomeBtn{border:0;background:#fff;border-radius:11px;padding:9px 12px;font-weight:700;color:#3947a7;box-shadow:0 2px 8px rgba(0,0,0,.07);}
+.modernPanel{background:#fff;border-radius:18px;padding:15px;box-shadow:0 3px 14px rgba(20,30,60,.07);margin-bottom:13px;}
+.modernStudent{display:flex;align-items:center;gap:12px;padding:13px 2px;border-bottom:1px solid #eef0f4;}
+.modernStudent:last-child{border-bottom:0;}
+
+.feeModeSwitch{display:flex;gap:8px;margin-top:14px;}
+.feeModeBtn{flex:1;border:0;border-radius:11px;padding:11px 8px;font-weight:700;background:#adb5bd;color:#fff;}
+.feeModeBtn.active{background:#3947a7;}
+.savedFeeIntervalWrap{display:flex;flex-direction:column;gap:7px;margin-bottom:8px;}
+.savedFeeIntervalBtn{display:flex;align-items:center;gap:7px;width:100%;}
+.savedFeeIntervalUse{flex:1;border:1px solid #dfe3eb;background:#eef2ff;color:#3947a7;border-radius:10px;padding:10px;font-weight:700;text-align:left;}
+.savedFeeIntervalDelete{width:38px;height:38px;border:0;border-radius:10px;background:#fff0f0;color:#d33;font-weight:800;}
+.feeDetailsName{font-size:20px;font-weight:800;color:#202638;margin-bottom:4px;}
+.feeDetailsJoining{font-size:13px;color:#606775;margin-bottom:14px;}
+.feeDetailsSectionTitle{font-size:15px;font-weight:800;margin:14px 0 8px;}
+.feeDetailRow{padding:9px 0;border-bottom:1px solid #edf0f4;}
+.feeDetailRow:last-child{border-bottom:0;}
+.feeCredited{color:#198754;font-weight:700;}
+.feePending{color:#b02a37;font-weight:700;}
+.feeStatusBlock{margin-top:5px;line-height:1.35;}
+.feeStatusLine{display:block;font-size:11.5px;font-weight:700;}
+.feeStatusMeta{display:block;font-size:11px;color:#606775;font-weight:600;margin-top:1px;}
+.feeSummaryBox{margin-top:14px;padding:11px;background:#f6f7fb;border-radius:11px;font-weight:700;line-height:1.8;}
+.avatar{width:43px;height:43px;border-radius:14px;background:#eef2ff;color:#4b4fc4;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex:none;overflow:hidden;cursor:pointer;}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.studentMain{min-width:0;flex:1;}
+.studentMain b{display:block;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.studentMeta{font-size:12px;color:#7b8190;margin-top:3px;}
+.studentActions{display:flex;gap:5px;}
+.miniBtn{border:0;border-radius:9px;padding:8px 9px;background:#eef2ff;color:#3947a7;font-weight:700;font-size:12px;}
+.miniBtn.red{background:#fff0f0;color:#d33;}
+
+.photoViewer{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:10000;display:none;flex-direction:column;align-items:center;justify-content:center;padding:20px;}
+.photoViewer img{max-width:92vw;max-height:72vh;object-fit:contain;border-radius:14px;}
+.photoViewerTop{position:absolute;top:18px;left:18px;right:18px;display:flex;justify-content:space-between;align-items:center;}
+.photoViewerBtn{border:0;border-radius:9px;padding:9px 13px;background:#fff;color:#333;font-weight:700;}
+.photoViewerActions{display:flex;gap:10px;margin-top:18px;justify-content:center;flex-wrap:wrap;}
+.photoViewerChange,.photoViewerRemove{border:0;border-radius:9px;padding:10px 16px;color:#fff;font-weight:700;}
+.photoViewerChange{background:#3947a7;}
+.photoViewerRemove{background:#d33;}
+.emptyState{text-align:center;padding:28px 10px;color:#777;}
+.attendanceDateBox{background:#fff;border-radius:18px;padding:15px;box-shadow:0 3px 14px rgba(20,30,60,.07);margin-bottom:13px;}
+.attendanceDateBox label{display:block;font-size:13px;font-weight:700;color:#606775;margin-bottom:6px;}
+.attendanceDateBox input{margin:0!important;}
+#attendanceLegend{font-size:12px;color:#606775;line-height:1.7;margin-bottom:10px;}
+#attendanceLegend b{color:#3947a7;}
+.attendanceRow{display:flex;align-items:center;gap:9px;padding:11px 0;border-bottom:1px solid #edf0f4;min-width:0;}
+.attendanceRow:last-child{border-bottom:0;}
+.attendanceAvatar{width:40px;height:40px;border-radius:13px;background:#eef2ff;color:#4b4fc4;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;flex:none;overflow:hidden;}
+.attendanceAvatar img{width:100%;height:100%;object-fit:cover;display:block;}
+.attendanceName{font-size:15px;font-weight:700;min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.attendanceChoices{display:flex;align-items:center;gap:5px;flex:none;}
+.attendanceChoice{width:31px;height:31px;padding:0;border:1px solid #d8dce5;border-radius:9px;background:#f8f9fc;color:#4b5563;font-weight:800;font-size:12px;cursor:pointer;}
+.attendanceChoice.selected{color:#fff;transform:scale(1.04);box-shadow:0 0 0 2px rgba(0,0,0,.10);}
+.attendanceChoice.selected.statusP{background:green;border-color:green;}
+.attendanceChoice.selected.statusA{background:red;border-color:red;}
+.attendanceChoice.selected.statusL{background:purple;border-color:purple;}
+.attendanceChoice.selected.statusS{background:blue;border-color:blue;}
+.attendanceChoice.selected.statusM{background:green;border-color:green;}
+.attendanceChoice.selected.statusH{background:#ff8800;border-color:#ff8800;}
+@media(max-width:390px){.attendanceRow{gap:6px}.attendanceAvatar{width:37px;height:37px;border-radius:11px}.attendanceName{font-size:14px}.attendanceChoices{gap:3px}.attendanceChoice{width:29px;height:29px;font-size:11px;border-radius:8px;}}
+#sundayBtn{border-radius:11px!important;}
+#reportArea .student{background:#fff;border:0;border-radius:16px;padding:14px;box-shadow:0 3px 14px rgba(20,30,60,.07);margin:0 0 12px;}
+.reportSlider{position:relative;overflow:hidden;}
+.reportSlide{display:none;}
+.reportSlide.active{display:block;}
+.reportSlideNav{display:flex;align-items:center;justify-content:center;gap:10px;margin:8px 0 12px;}
+.reportSlideBtn{border:0;border-radius:10px;background:#eef2ff;color:#3947a7;font-weight:800;font-size:20px;width:42px;height:38px;cursor:pointer;}
+.reportSlideNumber{height:38px;min-width:88px;padding:0 10px;border:1px solid #d8dce5;border-radius:10px;background:#fff;color:#3947a7;font-weight:800;text-align:center;}
+.reportSlideNumber:focus{outline:2px solid #b8c0ff;outline-offset:1px;}
+.reportSwipeHint{text-align:center;color:#777;font-size:12px;margin:-3px 0 9px;}
+
+#reportArea .summary{border-radius:10px;}
+.bottomNav{position:fixed;left:0;right:0;bottom:0;height:66px;background:rgba(255,255,255,.97);backdrop-filter:blur(10px);border-top:1px solid #e7e9ee;display:flex;justify-content:center;z-index:5000;box-shadow:0 -4px 18px rgba(20,30,60,.08);}
+.bottomNavInner{width:100%;max-width:720px;display:grid;grid-template-columns:repeat(5,1fr);}
+.navItem{border:0;background:none;color:#858b98;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;}
+.navItem span:first-child{font-size:21px;line-height:1;}
+.navItem.active{color:#3947a7;}
+@media(max-width:390px){.featureGrid{gap:9px}.featureCard{padding:15px 13px;min-height:118px}.featureCard h3{font-size:15px}.featureIcon{font-size:27px}.studentActions .miniBtn{padding:7px 6px}.appTitle{font-size:21px}}
+
 </style>  
-</head>  <body>  
+</head>  
+  <body>
+
+<div id="googleLogin">
+    <div class="googleLoginBox">
+        <h2>Tuition Attendance Manager</h2>
+        <p>Sign in to continue</p>
+        <div id="googleButton"></div>
+    </div>
+</div>
 <div id="lockScreen" style="
 position:fixed;
 top:0;
@@ -221,7 +468,46 @@ box-shadow:0 2px 8px rgba(0,0,0,.2);
 text-align:center;
 ">
 
-<h2 style="margin-bottom:15px;">App Locked</h2>
+<div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:8px;">
+<h2 style="margin:0;">App Locked</h2>
+<button
+  type="button"
+  onclick="unlockWithFingerprint(false)"
+  title="Unlock with fingerprint"
+  aria-label="Unlock with fingerprint"
+  style="
+    width:38px;
+    height:38px;
+    padding:7px;
+    border:1px solid #ddd;
+    border-radius:50%;
+    background:#f7f7f7;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  ">
+  <svg viewBox="0 0 24 24" width="25" height="25" fill="none" stroke="url(#fpGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <defs>
+      <linearGradient id="fpGradient" x1="3" y1="21" x2="21" y2="3" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#00a8ff"/>
+        <stop offset="0.5" stop-color="#7b2cff"/>
+        <stop offset="1" stop-color="#ff3d81"/>
+      </linearGradient>
+    </defs>
+    <path d="M12 3a7 7 0 0 0-7 7"/>
+    <path d="M12 6a4 4 0 0 0-4 4c0 3.2-.6 5.9-1.8 8.1"/>
+    <path d="M12 9a1 1 0 0 0-1 1c0 5.2-.9 8.4-2.6 10.2"/>
+    <path d="M15.9 20.2C17.3 17.8 18 14.5 18 10a6 6 0 0 0-12 0"/>
+    <path d="M19 18.5c.7-2.1 1-4.9 1-8.5a8 8 0 0 0-16 0"/>
+    <path d="M14.5 21c1.7-2.8 2.5-6.5 2.5-11a5 5 0 0 0-10 0c0 4.4-.7 7.3-1.8 9.3"/>
+  </svg>
+</button>
+</div>
+
+<p style="margin:0 0 15px;color:#666;font-size:15px;">
+Enter PIN or use fingerprint
+</p>
 
 <input
 type="password"
@@ -232,7 +518,7 @@ placeholder="Enter PIN">
 <button
 class="saveBtn"
 onclick="unlockApp()">
-Unlock
+Unlock with PIN
 </button>
 
 <div style="margin-top:15px;">
@@ -327,180 +613,197 @@ Reset PIN
 </div>
 
 </div>
-<div class="card header">
+<div class="appShell">
+  <header class="appHeader">
+    <div class="appHeaderTop">
+      <div>
+        <div class="appTitle">Tuition Manager</div>
+        <div class="appSubtitle">Simple • Organized • Made for Teachers</div>
+      </div>
+      <div class="headerActions">
+        <button class="headerIconBtn headerAdd" onclick="addStudent()" title="Add Student">+</button>
+        <div style="position:relative;">
+          <button class="headerIconBtn" onclick="toggleMenu()" title="Menu">☰</button>
+          <div id="menuPopup" class="modernMenuPopup" style="display:none;position:absolute;background:white;border:1px solid #ddd;box-shadow:0 8px 24px rgba(0,0,0,.16);z-index:999;">
+            <div class="modernMenuProfile">
+              <div class="modernMenuProfileName">
+                <span class="modernMenuIcon">👤</span>
+                <span id="ownerNameDisplay">Set Your Name</span>
+              </div>
+              <button class="ownerEditBtn" type="button" onclick="event.stopPropagation(); editOwnerName()" title="Edit Name" aria-label="Edit Name">✎</button>
+            </div>
+            <div class="modernMenuItem menuLockItem" onclick="toggleLock()">
+              <span class="modernMenuIcon">🔒</span>
+              <span class="modernMenuLabel">App Lock</span>
+              <label class="switch menuLockSwitch" onclick="event.stopPropagation();">
+                <input type="checkbox" id="lockSwitch" onchange="toggleLock()">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <div class="modernMenuItem" onclick="backupData()">
+              <span class="modernMenuIcon">💾</span>
+              <span class="modernMenuLabel">Backup</span>
+            </div>
+            <div class="modernMenuItem" onclick="restoreData()">
+              <span class="modernMenuIcon">♻️</span>
+              <span class="modernMenuLabel">Restore</span>
+            </div>
+            <div class="modernMenuItem" onclick="changePin()">
+              <span class="modernMenuIcon">🔑</span>
+              <span class="modernMenuLabel">Change PIN</span>
+            </div>
+            <div class="modernMenuItem" onclick="openDeveloperPopup()">
+              <span class="modernMenuIcon">📞</span>
+              <span class="modernMenuLabel">Contact Developer</span>
+            </div>
+            <div class="modernMenuItem" onclick="changeGoogleAccount()">
+              <span class="modernMenuIcon">🔄</span>
+              <span class="modernMenuLabel">Change Account</span>
+            </div>
+            <div class="modernMenuAccount">
+              <span id="googleEmailDisplay"></span>
+              <span id="driveSyncStatus">Drive sync: checking…</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
-<h1>Tuition Attendance</h1>
+  <main>
+    <section id="homeSection" class="section active">
+      <div class="dashboardWelcome">
+        <h2>Welcome back, <span id="welcomeName">Welcome</span> 👋</h2>
+        <p>Choose what you want to manage today.</p>
+      </div>
+      <div class="featureGrid">
+        <button class="featureCard cardStudents" onclick="showSection('studentsSection','studentsNav')">
+          <span class="featureIcon">👨‍🎓</span><h3>Students</h3><p id="studentCountText">Manage your students</p>
+        </button>
+        <button class="featureCard cardAttendance" onclick="showSection('attendanceSection','attendanceNav')">
+          <span class="featureIcon">📅</span><h3>Attendance</h3><p>Mark today's attendance</p>
+        </button>
+        <button class="featureCard cardFees" onclick="showSection('feesSection','feesNav')">
+          <span class="featureIcon">₹</span><h3>Fees</h3><p>Record & manage fees</p>
+        </button>
+        <button class="featureCard cardReports" onclick="showSection('reportsSection','reportsNav')">
+          <span class="featureIcon">📊</span><h3>Reports</h3><p>View monthly reports</p>
+        </button>
+      </div>
+      </div>
+    </section>
 
-<div style="
-display:flex;
-align-items:center;
-gap:10px;
-">
+    <section id="studentsSection" class="section">
+      <div class="pageHead"><div><h2>Students</h2><p>View and manage all your students</p></div><button class="backHomeBtn" onclick="goHome()">Home</button></div>
+      <div class="modernPanel studentSearchPanel">
+        <div class="searchWrap">
+          <span class="searchIcon">🔍</span>
+          <input id="studentSearchInput" type="search" placeholder="Search student..." oninput="renderStudentsPage()" autocomplete="off">
+        </div>
+      </div>
+      <div id="studentsArea" class="modernPanel"></div>
+    </section>
 
-<button class="addBtn"
-onclick="addStudent()">
-+
-</button>
+    <section id="attendanceSection" class="section">
+      <div class="pageHead"><div><h2>Daily Attendance</h2><p>Mark attendance for all active students</p></div><button class="backHomeBtn" onclick="goHome()">Home</button></div>
+      <div class="attendanceDateBox">
+        <label for="attDate">Attendance Date</label>
+        <input type="date" id="attDate">
+        <button id="sundayBtn" class="saveBtn" style="display:none;background:#6f42c1;margin-bottom:0;" onclick="markAllSunday()">Mark All Sunday</button>
+      </div>
+      <div class="modernPanel">
+        <div id="attendanceLegend"><b>P</b> = Present &nbsp; <b>A</b> = Absent &nbsp; <b>L</b> = Leave &nbsp; <b>S</b> = Sunday &nbsp; <b>M</b> = Sunday Manage &nbsp; <b>H</b> = Custom</div>
+        <div id="attendanceArea"></div>
+      </div>
+    </section>
 
-<label class="switch">
-<input
-type="checkbox"
-id="lockSwitch"
-onchange="toggleLock()">
-<span class="slider"></span>
-</label>
-<div style="position:relative;">
+    <section id="feesSection" class="section">
+      <div class="pageHead"><div><h2>Fees</h2><p>Record and manage student payments</p></div><button class="backHomeBtn" onclick="goHome()">Home</button></div>
+      <div id="feesArea" class="modernPanel"></div>
+    </section>
 
-<button
-onclick="toggleMenu()"
-style="
-background:none;
-border:none;
-font-size:24px;
-padding:5px 8px;
-cursor:pointer;
-">
-⋮
-</button>
-
-<div
-id="menuPopup"
-style="
-display:none;
-position:absolute;
-right:0;
-top:35px;
-background:white;
-border:1px solid #ddd;
-border-radius:8px;
-box-shadow:0 2px 8px rgba(0,0,0,.2);
-min-width:170px;
-z-index:999;
-">
-
-<div
-onclick="backupData()"
-style="
-padding:12px;
-cursor:pointer;
-border-bottom:1px solid #eee;
-">
-Backup Data
+    <section id="reportsSection" class="section">
+      <div class="pageHead"><div><h2>Reports</h2><p>Monthly attendance & fee records</p></div><button class="backHomeBtn" onclick="goHome()">Home</button></div>
+      <div class="modernPanel" style="padding:12px;">
+        <div style="display:flex;gap:8px;">
+          <select id="reportMonth" style="flex:1;min-width:0;" onchange="renderReports()">
+            <option value="01">January</option><option value="02">February</option><option value="03">March</option><option value="04">April</option><option value="05">May</option><option value="06">June</option><option value="07">July</option><option value="08">August</option><option value="09">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option>
+          </select>
+          <select id="reportYear" onchange="renderReports()" style="flex:1;min-width:0;"></select>
+        </div>
+      </div>
+      <div id="reportArea"></div>
+    </section>
+  </main>
 </div>
 
-<div
-onclick="restoreData()"
-style="
-padding:12px;
-cursor:pointer;
-border-bottom:1px solid #eee;
-">
-Restore Data
+<nav class="bottomNav">
+  <div class="bottomNavInner">
+    <button id="homeNav" class="navItem active" onclick="goHome()"><span>⌂</span><span>Home</span></button>
+    <button id="studentsNav" class="navItem" onclick="showSection('studentsSection','studentsNav')"><span>👥</span><span>Students</span></button>
+    <button id="attendanceNav" class="navItem" onclick="showSection('attendanceSection','attendanceNav')"><span>☑</span><span>Attendance</span></button>
+    <button id="feesNav" class="navItem" onclick="showSection('feesSection','feesNav')"><span>₹</span><span>Fees</span></button>
+    <button id="reportsNav" class="navItem" onclick="showSection('reportsSection','reportsNav')"><span>▦</span><span>Reports</span></button>
+  </div>
+</nav>
+
+<div class="popup" id="developerPopup">
+  <div class="popupContent developerPopupContent">
+    <button class="popupClose" onclick="closeDeveloperPopup()">✕</button>
+    <div class="developerPopupIcon">👨‍💻</div>
+    <h3>Tuition Attendance Manager</h3>
+    <p class="developerPopupByline">Developed by <b>Aayush Kumar</b></p>
+    <button class="popupSave" onclick="contactDeveloper(event)">📞 Contact Developer</button>
+    <a class="developerEmailBtn" href="mailto:aayushaniket1722@gmail.com">✉️ Email</a>
+  </div>
 </div>
 
-<div
-onclick="changePin()"
-style="
-padding:12px;
-cursor:pointer;
-">
-Change PIN
-</div>
+<div class="popup" id="feePopup">
+  <div class="popupContent" style="max-height:90vh;overflow:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">
+      <h3 id="feeUpdateTitle" style="margin:0;"></h3>
+      <button onclick="closeFeePopup()" style="border:none;background:none;font-size:22px;font-weight:bold;">✕</button>
+    </div>
+    <div style="font-size:18px;font-weight:800;margin-top:10px;">Update Fee</div>
 
-</div>
-</div>
-</div>
-</div>
-
- <div class="card">  
-<h2>Daily Attendance</h2>  <input type="date" id="attDate">  
-<button
-id="sundayBtn"
-class="saveBtn"
-style="display:none;background:#6f42c1;margin-bottom:10px;"
-onclick="markAllSunday()">
-Mark All Sunday
-</button>
-<div id="attendanceArea"></div>  <button class="saveBtn" onclick="saveAttendance()">  
-Save Attendance  
-</button>  
-</div>  <div class="card">  
-<h2>Monthly Report & Fee Tracker</h2>  
-<div style="display:flex;gap:8px;">
-<select id="reportMonth" style="flex:1;min-width:0;" onchange="renderReports()">  
-  <option value="01">January</option>  
-  <option value="02">February</option>  
-  <option value="03">March</option>  
-  <option value="04">April</option>  
-  <option value="05">May</option>  
-  <option value="06">June</option>  
-  <option value="07">July</option>  
-  <option value="08">August</option>  
-  <option value="09">September</option>  
-  <option value="10">October</option>  
-  <option value="11">November</option>  
-  <option value="12">December</option>  
-</select>
-<select id="reportYear" onchange="renderReports()" style="flex:1;min-width:0;"></select>
-</div>
-<div id="reportArea"></div>  </div>   <div class="popup" id="feePopup">  <div class="popupContent">
-
-<div style="text-align:right;">
-<button onclick="closeFeePopup()"
-style="
-border:none;
-background:none;
-font-size:22px;
-font-weight:bold;
-">
-✕
-</button>
-</div>
-
-<h3>Update Fee</h3>   <select id="feeMode">  
-<option value="">Select Mode</option>  
-<option>Cash</option>  
-<option>UPI</option>  
-</select>  <input type="number"  
-id="feeAmount"  
-placeholder="Amount">
-
-<input type="date"  
-id="feeDate">
-
-<button class="popupSave"  
-onclick="saveFee()">
-Save Fee
-</button>
-
-</div>  </div>
-<div class="popup" id="feeStatusPopup">
-  <div class="popupContent">
-
-    <h3>Fee Status</h3>
-
-    <div style="
-      display:flex;
-      gap:10px;
-      margin-top:20px;
-    ">
-
-      <button
-        class="saveBtn"
-        style="background:gray;"
-        onclick="closeFeeStatus()">
-        Cancel
-      </button>
-
-      <button
-        class="saveBtn"
-        style="background:red;"
-        onclick="deleteFeeStatus()">
-        Delete Status
-      </button>
-
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button id="feeMonthModeBtn" class="feeModeBtn active" onclick="selectFeeUpdateMode('month')">Select Fee Month</button>
+      <button id="feePeriodModeBtn" class="feeModeBtn" onclick="selectFeeUpdateMode('period')">Select Fee Period</button>
     </div>
 
+    <div id="feeMonthFields" style="margin-top:12px;text-align:left;">
+      <label style="font-size:13px;font-weight:600;">Fee Month</label>
+      <select id="feeMonthSelect"></select>
+    </div>
+
+    <div id="feePeriodFields" style="margin-top:12px;text-align:left;display:none;">
+      <label style="font-size:13px;font-weight:600;">Fee Period</label>
+      <div style="display:flex;gap:8px;align-items:center;margin-top:9px;">
+        <input type="date" id="feePeriodStart">
+        <span>to</span>
+        <input type="date" id="feePeriodEnd">
+      </div>
+      <div id="feePeriodDays" style="font-size:12px;color:#606775;margin-top:4px;"></div>
+    </div>
+
+    <input type="number" id="feeAmount" placeholder="Enter Fee Amount" min="0" step="0.01">
+    <select id="feeMode" style="margin-top:2px;">
+      <option value="">Select Payment Mode</option>
+      <option>Cash</option>
+      <option>UPI</option>
+    </select>
+    <input type="date" id="feeDate">
+
+    <button class="popupSave" onclick="saveFee()">Save Fee</button>
+  </div>
+</div>
+<div class="popup" id="feeStatusPopup">
+  <input type="date" id="joiningDatePicker" aria-label="Tuition Joining Date" onchange="saveJoiningDateFromPicker(this.value)" style="position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;">
+  <div class="popupContent" style="max-height:90vh;overflow:auto;">
+    <div style="display:flex;justify-content:flex-end;align-items:center;">
+      <button onclick="closeFeeStatus()" style="border:none;background:none;font-size:22px;font-weight:bold;">✕</button>
+    </div>
+    <div id="feeDetailsContent" style="margin-top:14px;text-align:left;"></div>
   </div>
 </div>
 
@@ -535,217 +838,1113 @@ Save Fee
   </div>
 </div>
 
-<script>  
-  
-let students = [];  
-let currentStudent = null;  
-function checkSundayButton(){
+<script>
+const GOOGLE_CLIENT_ID = "858615378828-7b1vhd70qn7h0f8c4l7vdjf4clp1qm4e.apps.googleusercontent.com";
+const DRIVE_SCOPE = "https://www.googleapis.com/auth/drive.appdata";
+const DRIVE_FILE_NAME = "Tuition_Attendance_Manager_Data.json";
+const DATA_KEY_PREFIX = "tuitionData_v2_";
+const PIN_KEY_PREFIX = "appPin_v2_";
+const SYNC_KEY_PREFIX = "tuitionSync_v1_";
+const OWNER_NAME_KEY_PREFIX = "tuitionOwnerName_v1_";
 
-let date =
-document.getElementById("attDate").value;
+let googleUser = null;
+let driveTokenClient = null;
+let driveAccessToken = null;
+let driveAuthPromise = null;
+let syncTimer = null;
+let syncInProgress = false;
+let currentAccountKey = null;
+let currentAccountSub = null;
 
-if(!date) return;
+let students = [];
+let currentStudent = null;
+let selectedAttendanceStudent = null;
+let selectedAttendanceDate = null;
+let selectedStudentDetails = null;
+let selectedPhotoStudent = null;
 
-let day =
-new Date(date).getDay();
-
-document.getElementById("sundayBtn")
-.style.display =
-(day === 0) ? "block" : "none";
-
-}
-function markAllSunday(){
-
-students.forEach((s,index)=>{
-
-if(s.active === false) return;
-
-document.getElementById(
-"status"+index
-).value = "Sunday";
-
-});
-
-}
-function toggleLock(){
-
-let savedPin =
-localStorage.getItem("appPin");
-
-if(savedPin){
-
-let pin = prompt(
-"Enter PIN to Disable Lock"
-);
-
-if(pin === savedPin){
-
-localStorage.removeItem("appPin");
-
-document.getElementById(
-"lockSwitch"
-).checked = false;
-
-alert("App Lock Disabled");
-
-}else{
-
-alert("Wrong PIN");
-
-document.getElementById("lockSwitch").checked = true;
-
+function accountKeyFromSub(sub) {
+  return encodeURIComponent(String(sub || "unknown"));
 }
 
-}else{
-
-let pin =
-prompt("Create 4 Digit PIN");
-
-if(!pin){
-  document.getElementById("lockSwitch").checked = false;
-  return;
+function getDataKey() {
+  return currentAccountKey ? DATA_KEY_PREFIX + currentAccountKey : "tuitionData_v2";
 }
 
-if(pin.length!=4 || isNaN(pin)){
-
-alert("PIN must be 4 digits");
-document.getElementById("lockSwitch").checked = false;
-return;
-
+function getPinKey() {
+  return currentAccountKey ? PIN_KEY_PREFIX + currentAccountKey : "appPin_v2";
 }
 
-localStorage.setItem(
-"appPin",
-pin
-);
-
-document.getElementById(
-"lockSwitch"
-).checked = true;
-
-alert("App Lock Enabled");
-}
-}
-function addStudent(){  
-  
-let name = prompt("Student Name");  
-  
-if(!name) return;  
-  
-students.push({
-name:name,
-fees: [],
-attendance:[],
-active:true
-});
-  
-render();  
-  
-}  
-  
-function render(){  
-  let attendanceArea = document.getElementById("attendanceArea");  
-  attendanceArea.innerHTML="";  
-
-  students.forEach((s,index)=>{  
-    if(s.active === false) return;
-
-    attendanceArea.innerHTML += `  
-    <div class="student">  
-      <b>${s.name}</b>  
-      <select id="status${index}" onchange="customStatus(${index})">
-        <option>Present</option>  
-        <option>Absent ❌</option>  
-        <option>Leave</option>  
-        <option>Sunday</option>  
-        <option>Sunday Manage ✅</option>  
-        <option>Custom</option>
-      </select>  
-    </div>  
-    `;  
-  });  
-
-  renderReports();  
-}  
-    function customStatus(index){
-
-let select = document.getElementById("status"+index);
-
-if(select.value=="Custom"){
-
-let text = prompt("Enter Extra Holiday");
-
-if(text){
-
-select.dataset.customStatus = text;
-
-}else{
-
-select.value="Present";
-delete select.dataset.customStatus;
-
+function getSyncKey() {
+  return currentAccountKey ? SYNC_KEY_PREFIX + currentAccountKey : "tuitionSync_v1";
 }
 
+function getOwnerNameKey() {
+  return currentAccountKey ? OWNER_NAME_KEY_PREFIX + currentAccountKey : "tuitionOwnerName_v1";
 }
 
+function getOwnerName() {
+  return (localStorage.getItem(getOwnerNameKey()) || "").trim();
+}
+
+function setOwnerName(name) {
+  const cleanName = String(name || "").trim().replace(/\s+/g, " ");
+  if (!cleanName) return false;
+  localStorage.setItem(getOwnerNameKey(), cleanName);
+  updateOwnerNameDisplay();
+
+  if (currentAccountKey) {
+    const meta = getSyncMeta();
+    meta.updatedAt = Date.now();
+    meta.pending = true;
+    setSyncMeta(meta);
+    scheduleDriveSync();
   }
-  
-function saveAttendance(){  
-  
-let date =  
-document.getElementById("attDate").value;  
-  
-if(!date){  
-alert("Select Date");  
-return;  
-}  
-  
-students.forEach((s,index)=>{  
-  if(s.active === false) return;
-  
- let select =
-document.getElementById("status"+index);
 
-let status = select.value;
-
-if(status=="Custom"){
-
-let customText = select.dataset.customStatus;
-
-if(customText){
-
-status = "EH|" + customText;
-
-}else{
-
-status = "Custom";
-
+  return true;
 }
 
-} 
-  
-  
-let existing = s.attendance.find(
-  a => a.date === date
-);
+function updateOwnerNameDisplay() {
+  const name = getOwnerName();
+  const nameDisplay = document.getElementById("ownerNameDisplay");
+  const welcomeName = document.getElementById("welcomeName");
 
-if(existing){
-  existing.status = status;
-}else{
-  s.attendance.push({
-    date: date,
-    status: status
+  if (nameDisplay) nameDisplay.textContent = name || "Set Your Name";
+  if (welcomeName) welcomeName.textContent = name || "Welcome";
+}
+
+function editOwnerName() {
+  const currentName = getOwnerName();
+  const newName = prompt("Enter your name", currentName || "");
+  if (newName === null) return;
+
+  const cleanName = newName.trim().replace(/\s+/g, " ");
+  if (!cleanName) {
+    alert("Name cannot be empty");
+    return;
+  }
+
+  setOwnerName(cleanName);
+}
+
+function ensureOwnerName(defaultName = "") {
+  const existingName = getOwnerName();
+  if (existingName) {
+    updateOwnerNameDisplay();
+    return;
+  }
+
+  const suggestedName = String(defaultName || "").trim();
+  const enteredName = prompt(
+    "Enter your name",
+    suggestedName
+  );
+
+  if (enteredName !== null) {
+    const cleanName = enteredName.trim().replace(/\s+/g, " ");
+    if (cleanName) localStorage.setItem(getOwnerNameKey(), cleanName);
+  }
+
+  updateOwnerNameDisplay();
+}
+
+function getDriveBackupOwnerName() {
+  return getOwnerName();
+}
+
+function getSyncMeta() {
+  try {
+    return JSON.parse(localStorage.getItem(getSyncKey()) || '{"updatedAt":0,"pending":false}');
+  } catch {
+    return {updatedAt:0, pending:false};
+  }
+}
+
+function setSyncMeta(meta) {
+  localStorage.setItem(getSyncKey(), JSON.stringify(meta));
+}
+
+function setDriveSyncStatus(text, type) {
+  const el = document.getElementById("driveSyncStatus");
+  if (!el) return;
+  el.textContent = text;
+  el.style.color =
+    type === "error" ? "#dc3545" :
+    type === "ok" ? "#198754" :
+    "#666";
+}
+
+function saveLocalData(markPending = true) {
+  localStorage.setItem(getDataKey(), JSON.stringify(students));
+
+  if (markPending && currentAccountKey) {
+    const meta = getSyncMeta();
+    meta.updatedAt = Date.now();
+    meta.pending = true;
+    setSyncMeta(meta);
+    scheduleDriveSync();
+  }
+}
+
+function loadAccountData() {
+  let saved = localStorage.getItem(getDataKey());
+
+  // One-time migration for the old version: attach existing local data
+  // to the Google account that signs in first, instead of exposing it
+  // to every account.
+  if (!saved && currentAccountKey && !localStorage.getItem("tuitionAccountMigration_v1")) {
+    const legacy = localStorage.getItem("tuitionData_v2");
+    if (legacy) {
+      saved = legacy;
+      localStorage.setItem(getDataKey(), legacy);
+      localStorage.setItem("tuitionAccountMigration_v1", "done");
+    }
+  }
+
+  students = [];
+  if (saved) {
+    try {
+      students = JSON.parse(saved);
+    } catch {
+      students = [];
+    }
+  }
+
+  students.forEach(s => {
+    if (!s.fees) s.fees = [];
+    if (!s.attendance) s.attendance = [];
+    if (typeof s.active !== "boolean") s.active = true;
+    if (typeof s.monthlyFee === "undefined") s.monthlyFee = 0;
+    if (!s.feeCycle) s.feeCycle = "month";
+    if (!s.joiningDate) s.joiningDate = new Date().toISOString().slice(0,10);
+    if (!s.savedFeeInterval) s.savedFeeInterval = null;
   });
 }
-  
-});  
-  
-renderReports();  
-  
-alert("Attendance Saved");  
-  
-}  
-  
+
+function handleGoogleLogin(response) {
+  try {
+    const payload = JSON.parse(
+      atob(response.credential.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))
+    );
+
+    if (!payload.sub || !payload.email) throw new Error("Invalid Google identity.");
+
+    googleUser = response.credential;
+    currentAccountSub = payload.sub;
+    currentAccountKey = accountKeyFromSub(payload.sub);
+
+    if (!getOwnerName() && payload.name) {
+      localStorage.setItem(getOwnerNameKey(), String(payload.name).trim());
+    }
+
+    localStorage.setItem("googleLoggedIn", "true");
+    localStorage.setItem("googleEmail", payload.email);
+    localStorage.setItem("googleSub", payload.sub);
+
+    // Keep the existing app lock, but make it account-specific.
+    const legacyPin = localStorage.getItem("appPin_v2");
+    const accountPinKey = getPinKey();
+    if (!localStorage.getItem(accountPinKey) && legacyPin) {
+      localStorage.setItem(accountPinKey, legacyPin);
+    }
+
+    loadAccountData();
+    updateGoogleEmailDisplay();
+    updateOwnerNameDisplay();
+    document.body.classList.add("googleLoggedIn");
+    document.getElementById("googleLogin").style.display = "none";
+    render();
+
+    // Drive permission is requested once, then future syncs are automatic.
+    initDriveAuthorization(true);
+  } catch (error) {
+    console.error("Google login error:", error);
+    alert("Google Login failed. Please try again.");
+  }
+}
+
+function updateGoogleEmailDisplay() {
+  const email = localStorage.getItem("googleEmail");
+  const display = document.getElementById("googleEmailDisplay");
+  if (display && email) display.textContent = email;
+}
+
+function initGoogleLogin() {
+  if (!window.google || !google.accounts || !google.accounts.id) return;
+
+  google.accounts.id.initialize({
+    client_id: GOOGLE_CLIENT_ID,
+    callback: handleGoogleLogin,
+    auto_select: true
+  });
+
+  const button = document.getElementById("googleButton");
+  if (button) {
+    button.innerHTML = "";
+    google.accounts.id.renderButton(button, {
+      theme: "outline",
+      size: "large",
+      text: "signin_with",
+      shape: "rectangular"
+    });
+  }
+}
+
+function initDriveAuthorization(forceConsent = false) {
+  if (!window.google || !google.accounts || !google.accounts.oauth2 || !currentAccountKey) {
+    return Promise.reject(new Error("Google services are not ready."));
+  }
+
+  if (driveAccessToken) return Promise.resolve(driveAccessToken);
+  if (driveAuthPromise) return driveAuthPromise;
+
+  driveAuthPromise = new Promise((resolve, reject) => {
+    driveTokenClient = google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: DRIVE_SCOPE,
+      callback: response => {
+        driveAuthPromise = null;
+
+        if (response && response.access_token) {
+          driveAccessToken = response.access_token;
+          localStorage.setItem("driveAuthorized", "true");
+          setDriveSyncStatus("Drive sync active", "ok");
+          resolve(driveAccessToken);
+        } else {
+          const err = new Error(response?.error || "Google Drive authorization failed.");
+          setDriveSyncStatus("Drive permission needed", "error");
+          reject(err);
+        }
+      }
+    });
+
+    try {
+      // Reuse the Google account already selected for this app.
+      // This prevents the Drive authorization step from asking the user
+      // to choose an email again on every app reopen.
+      const savedEmail = localStorage.getItem("googleEmail");
+      const tokenRequest = forceConsent
+        ? {prompt:"consent", login_hint: savedEmail || undefined}
+        : {prompt:"none", login_hint: savedEmail || undefined};
+      driveTokenClient.requestAccessToken(tokenRequest);
+    } catch (error) {
+      driveAuthPromise = null;
+      reject(error);
+    }
+  });
+
+  return driveAuthPromise;
+}
+
+function getDriveToken(force = false) {
+  if (force) driveAccessToken = null;
+  if (driveAccessToken) return Promise.resolve(driveAccessToken);
+
+  // On app reopen, request the token silently. Never open Google's
+  // account chooser/consent dialog automatically. The consent dialog
+  // is shown only during the first successful Google login.
+  return initDriveAuthorization(false);
+}
+
+async function driveFetch(url, options = {}, retry = true) {
+  const token = await getDriveToken(false);
+  const headers = new Headers(options.headers || {});
+  headers.set("Authorization", "Bearer " + token);
+
+  const response = await fetch(url, {...options, headers});
+
+  if (response.status === 401 && retry) {
+    driveAccessToken = null;
+    const newToken = await getDriveToken(true);
+    headers.set("Authorization", "Bearer " + newToken);
+    return fetch(url, {...options, headers});
+  }
+
+  return response;
+}
+
+async function findDriveDataFile() {
+  const q = encodeURIComponent(
+    `'appDataFolder' in parents and name = '${DRIVE_FILE_NAME}' and trashed = false`
+  );
+
+  const response = await driveFetch(
+    "https://www.googleapis.com/drive/v3/files?q=" + q +
+    "&spaces=appDataFolder&fields=files(id,name,modifiedTime,size)&pageSize=10"
+  );
+
+  if (!response.ok) throw new Error("Could not search Google Drive.");
+  const data = await response.json();
+  return data.files && data.files.length ? data.files[0] : null;
+}
+
+async function readDriveData(fileId) {
+  const response = await driveFetch(
+    "https://www.googleapis.com/drive/v3/files/" + encodeURIComponent(fileId) + "?alt=media"
+  );
+  if (!response.ok) throw new Error("Could not download Google Drive data.");
+  return response.json();
+}
+
+async function uploadDriveData(backup, fileId = null) {
+  const fileContent = JSON.stringify(backup);
+
+  if (fileId) {
+    const response = await driveFetch(
+      "https://www.googleapis.com/upload/drive/v3/files/" +
+      encodeURIComponent(fileId) + "?uploadType=media",
+      {
+        method: "PATCH",
+        headers: {"Content-Type": "application/json"},
+        body: fileContent
+      }
+    );
+
+    if (!response.ok) throw new Error("Google Drive update failed.");
+    return response.json();
+  }
+
+  const metadata = {
+    name: DRIVE_FILE_NAME,
+    mimeType: "application/json",
+    parents: ["appDataFolder"]
+  };
+
+  const form = new FormData();
+  form.append("metadata", new Blob([JSON.stringify(metadata)], {
+    type: "application/json"
+  }));
+  form.append("file", new Blob([fileContent], {
+    type: "application/json"
+  }));
+
+  const response = await driveFetch(
+    "https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,modifiedTime",
+    {method: "POST", body: form}
+  );
+
+  if (!response.ok) throw new Error("Google Drive upload failed.");
+  return response.json();
+}
+
+async function syncWithGoogleDrive() {
+  if (!currentAccountKey || !navigator.onLine || syncInProgress) return;
+
+  syncInProgress = true;
+  setDriveSyncStatus("Syncing…", "working");
+
+  try {
+    await getDriveToken(false);
+
+    const localMeta = getSyncMeta();
+    const localUpdatedAt = Number(localMeta.updatedAt || 0);
+    const driveFile = await findDriveDataFile();
+
+    if (!driveFile) {
+      const backup = {
+        schemaVersion: 1,
+        accountSub: currentAccountSub,
+        email: localStorage.getItem("googleEmail") || "",
+        updatedAt: localUpdatedAt || Date.now(),
+        ownerName: getDriveBackupOwnerName(),
+        appPin: localStorage.getItem(getPinKey()) || null,
+        students: students
+      };
+
+      const created = await uploadDriveData(backup);
+      const syncedAt = Number(backup.updatedAt);
+      setSyncMeta({updatedAt: syncedAt, pending: false, driveFileId: created.id});
+      setDriveSyncStatus("Synced with Google Drive", "ok");
+      return;
+    }
+
+    const driveBackup = await readDriveData(driveFile.id);
+    const driveUpdatedAt = Number(driveBackup?.updatedAt || 0);
+
+    // If local changes are newer, upload them. If Drive is newer, download them.
+    if (localUpdatedAt > driveUpdatedAt) {
+      const backup = {
+        schemaVersion: 1,
+        accountSub: currentAccountSub,
+        email: localStorage.getItem("googleEmail") || "",
+        updatedAt: localUpdatedAt,
+        ownerName: getDriveBackupOwnerName(),
+        appPin: localStorage.getItem(getPinKey()) || null,
+        students: students
+      };
+
+      await uploadDriveData(backup, driveFile.id);
+      setSyncMeta({updatedAt: localUpdatedAt, pending: false, driveFileId: driveFile.id});
+      setDriveSyncStatus("Synced with Google Drive", "ok");
+    } else if (driveUpdatedAt > localUpdatedAt) {
+      if (Array.isArray(driveBackup.students)) {
+        students = driveBackup.students;
+        students.forEach(s => {
+          if (!s.fees) s.fees = [];
+          if (!s.attendance) s.attendance = [];
+          if (typeof s.active !== "boolean") s.active = true;
+        });
+        localStorage.setItem(getDataKey(), JSON.stringify(students));
+        if (Object.prototype.hasOwnProperty.call(driveBackup, "ownerName") && String(driveBackup.ownerName || "").trim()) {
+          localStorage.setItem(getOwnerNameKey(), String(driveBackup.ownerName).trim());
+        }
+        if (Object.prototype.hasOwnProperty.call(driveBackup, "appPin")) {
+          if (driveBackup.appPin) localStorage.setItem(getPinKey(), driveBackup.appPin);
+          else localStorage.removeItem(getPinKey());
+        }
+        setSyncMeta({updatedAt: driveUpdatedAt, pending: false, driveFileId: driveFile.id});
+        render();
+      }
+      setDriveSyncStatus("Synced with Google Drive", "ok");
+    } else {
+      setSyncMeta({updatedAt: localUpdatedAt, pending: false, driveFileId: driveFile.id});
+      setDriveSyncStatus("Synced with Google Drive", "ok");
+    }
+  } catch (error) {
+    console.error("Drive sync failed:", error);
+    setDriveSyncStatus("Offline / sync pending", "error");
+    // Keep local data and the pending flag. The next online event/retry will sync it.
+    const meta = getSyncMeta();
+    meta.pending = true;
+    setSyncMeta(meta);
+  } finally {
+    syncInProgress = false;
+  }
+}
+
+function scheduleDriveSync() {
+  clearTimeout(syncTimer);
+  if (!currentAccountKey || !navigator.onLine) return;
+
+  syncTimer = setTimeout(() => {
+    syncWithGoogleDrive();
+  }, 700);
+}
+
+function startAutomaticSync() {
+  window.addEventListener("online", () => {
+    setDriveSyncStatus("Internet restored — syncing…", "working");
+    scheduleDriveSync();
+  });
+
+  window.addEventListener("offline", () => {
+    setDriveSyncStatus("Offline — changes saved locally", "error");
+  });
+
+  // Retry periodically only while there are pending changes.
+  setInterval(() => {
+    const meta = getSyncMeta();
+    if (navigator.onLine && meta.pending) scheduleDriveSync();
+  }, 15000);
+}
+
+function checkSundayButton(){
+  const date = document.getElementById("attDate").value;
+  if(!date) return;
+  const day = new Date(date).getDay();
+  document.getElementById("sundayBtn").style.display =
+    (day === 0) ? "block" : "none";
+}
+
+function markAllSunday(){
+  const date = document.getElementById("attDate").value;
+  if(!date) return;
+
+  students.forEach(s=>{
+    if(s.active === false) return;
+    if(!s.attendance) s.attendance=[];
+    const existing = s.attendance.find(a=>a.date===date);
+    if(existing){
+      existing.status = "Sunday";
+    }else{
+      s.attendance.push({date:date,status:"Sunday"});
+    }
+  });
+
+  saveLocalData(true);
+  renderAttendance();
+}
+
+function toggleLock(){
+  const savedPin = localStorage.getItem(getPinKey());
+
+  if(savedPin){
+    const pin = prompt("Enter PIN to Disable Lock");
+    if(pin === null){
+      // User pressed Cancel. Keep App Lock enabled without showing an error.
+      document.getElementById("lockSwitch").checked = true;
+      return;
+    }
+    if(pin === savedPin){
+      localStorage.removeItem(getPinKey());
+      document.getElementById("lockSwitch").checked = false;
+      saveLocalData(true);
+      alert("App Lock Disabled");
+    }else{
+      alert("Wrong PIN");
+      document.getElementById("lockSwitch").checked = true;
+    }
+  }else{
+    const pin = prompt("Create 4 Digit PIN");
+    if(!pin){
+      document.getElementById("lockSwitch").checked = false;
+      return;
+    }
+    if(pin.length!=4 || isNaN(pin)){
+      alert("PIN must be 4 digits");
+      document.getElementById("lockSwitch").checked = false;
+      return;
+    }
+    localStorage.setItem(getPinKey(), pin);
+    saveLocalData(true);
+    document.getElementById("lockSwitch").checked = true;
+    alert("App Lock Enabled");
+    if(fingerprintSupported() && !localStorage.getItem(fingerprintStorageKey())){
+      setTimeout(async ()=>{
+        const setup=confirm("Would you like to unlock App Lock with your phone's fingerprint too?");
+        if(setup){
+          const ok=await registerFingerprint();
+          if(ok) alert("Fingerprint unlock enabled.");
+        }
+      },100);
+    }
+  }
+}
+
+function addStudent(){
+  const name = prompt("Student Name");
+  if(!name) return;
+  students.push({
+    name:name,
+    fees: [],
+    attendance:[],
+    active:true,
+    monthlyFee:0,
+    feeCycle:"month",
+    joiningDate:new Date().toISOString().slice(0,10),
+    savedFeeInterval:null
+  });
+  saveLocalData(true);
+  render();
+}
+
+let currentSectionId = 'homeSection';
+let sectionHistoryStack = [];
+let pendingHomeNavigation = false;
+let handlingSectionPop = false;
+
+function sectionNavId(sectionId){
+  const map={
+    homeSection:'homeNav',
+    studentsSection:'studentsNav',
+    attendanceSection:'attendanceNav',
+    feesSection:'feesNav',
+    reportsSection:'reportsNav'
+  };
+  return map[sectionId] || 'homeNav';
+}
+
+function showSection(sectionId, navId, fromHistory){
+  const section=document.getElementById(sectionId);
+  if(!section) return;
+
+  // A normal tap creates one browser-history step. Android Back can then
+  // return to the previous section instead of immediately leaving the app.
+  if(!fromHistory && !handlingSectionPop && sectionId!==currentSectionId){
+    history.pushState({tuitionSection:sectionId}, '', location.href);
+    sectionHistoryStack.push(sectionId);
+  }
+
+  currentSectionId=sectionId;
+  document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));
+  section.classList.add('active');
+  document.querySelectorAll('.navItem').forEach(el=>el.classList.remove('active'));
+  const nav=document.getElementById(navId || sectionNavId(sectionId));
+  if(nav) nav.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(sectionId==='studentsSection') renderStudentsPage();
+  if(sectionId==='feesSection') renderFeesPage();
+  if(sectionId==='reportsSection') renderReports();
+}
+
+function goHome(){
+  // Home is the root of the app. If we are several screens deep, jump back
+  // to the guard entry in one operation so Back on Home can behave normally.
+  if(currentSectionId==='homeSection') return;
+  if(sectionHistoryStack.length){
+    pendingHomeNavigation=true;
+    history.go(-sectionHistoryStack.length);
+    return;
+  }
+  showSection('homeSection','homeNav',true);
+}
+
+function renderStudentsPage(){
+  const area=document.getElementById('studentsArea');
+  if(!area) return;
+  const active=students.filter(s=>s.active!==false);
+  const inactive=students.filter(s=>s.active===false);
+  const query=(document.getElementById('studentSearchInput')?.value || '').trim().toLowerCase();
+  const allList=[...active,...inactive];
+  const list=query ? allList.filter(s=>(s.name||'').toLowerCase().includes(query)) : allList;
+  let html='';
+  if(!students.length){
+    html='<div class="emptyState"><div style="font-size:38px;margin-bottom:8px;">👨‍🎓</div><b>No students yet</b><div style="margin-top:5px;">Tap + at the top to add your first student.</div></div>';
+  }else if(!list.length){
+    html='<div class="emptyState"><div style="font-size:34px;margin-bottom:8px;">🔎</div><b>No student found</b><div style="margin-top:5px;">No student matches “'+escapeHtml(query)+'”.</div></div>';
+  }else{
+    const listHtml=list.map((s)=>{
+      const index=students.indexOf(s);
+      const initial=(s.name||'?').trim().charAt(0).toUpperCase();
+      const avatarContent=s.photo
+        ? `<img src="${s.photo}" alt="Student photo">`
+        : initial;
+      return `<div class="modernStudent">
+        <div class="avatar" onclick="handleStudentPhotoBoxClick(${index})" title="Student photo">${avatarContent}</div>
+        <input id="studentPhotoInput${index}" type="file" accept="image/*" style="display:none;" onchange="uploadStudentPhoto(event,${index})">
+        <div class="studentMain"><b>${s.name}</b><div class="studentMeta">${s.active===false?'Inactive':'Active'} · ${s.attendance?.length||0} attendance records</div></div>
+        <div class="studentActions">
+          <button class="miniBtn" onclick="openStudentDetails(${index})">View</button>
+          <button class="miniBtn" onclick="editStudent(${index})">Edit</button>
+          <button class="miniBtn red" onclick="deleteStudent(${index})">🗑️</button>
+        </div>
+      </div>`;
+    }).join('');
+    html=listHtml;
+  }
+  area.innerHTML=html;
+  const count=document.getElementById('studentCountText');
+  if(count) count.textContent=`${active.length} active${students.length!==active.length?' · '+(students.length-active.length)+' inactive':''}`;
+}
+
+function feeDateObj(date){
+  if(!date) return null;
+  const d=new Date(date+'T00:00:00');
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function formatFeeDate(date){
+  const d=feeDateObj(date);
+  if(!d) return date||"";
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'2-digit',year:'numeric'});
+}
+
+function formatFeeShortDate(date){
+  const d=feeDateObj(date);
+  if(!d) return date||"";
+  return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+
+function daysBetweenDates(start,end){
+  const a=feeDateObj(start), b=feeDateObj(end);
+  if(!a || !b) return 0;
+  return Math.round((b-a)/86400000)+1;
+}
+
+function addDaysToDate(date,days){
+  const d=feeDateObj(date);
+  if(!d) return "";
+  d.setDate(d.getDate()+days);
+  return d.toISOString().slice(0,10);
+}
+
+function monthKey(year,month){
+  return String(year)+'-'+String(month).padStart(2,'0');
+}
+
+function feeMonthLabel(key){
+  const [y,m]=String(key||'').split('-');
+  const d=new Date(Number(y),Number(m)-1,1);
+  return isNaN(d.getTime()) ? key : d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+}
+
+function getFeeRecordForMonth(student,key){
+  return (student.fees||[]).find(f => f.type==='month' && f.monthKey===key);
+}
+
+function getFeeRecordForPeriod(student,start,end){
+  return (student.fees||[]).find(f => f.type==='period' && f.periodStart===start && f.periodEnd===end);
+}
+
+function getFeeCycleMode(student){
+  return student && student.feeCycle==='period' ? 'period' : 'month';
+}
+
+function getKnownFeeAmount(student){
+  if(!student) return 0;
+  const amount=Number(student.monthlyFee);
+  return Number.isFinite(amount) && amount>0 ? amount : 0;
+}
+
+function getLocalFeeToday(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getCreditedFeeRecords(student){
+  return (student.fees||[]).map((rec,index)=>({rec,index})).filter(x=>{
+    const r=x.rec;
+    if(r.status!=='credited') return false;
+    if(r.type==='month') return !!r.monthKey;
+    if(r.type==='period') return !!(r.periodStart && r.periodEnd && feeDateObj(r.periodEnd)>=feeDateObj(r.periodStart));
+    return false;
+  }).sort((a,b)=>Number(a.rec.updatedAt||a.index)-Number(b.rec.updatedAt||b.index));
+}
+
+function getCreditedRange(rec,student){
+  if(!rec) return null;
+  if(rec.type==='month' && rec.monthKey){
+    const y=Number(rec.monthKey.slice(0,4));
+    const m=Number(rec.monthKey.slice(5,7));
+    const endDay=new Date(y,m,0).getDate();
+    let start=`${rec.monthKey}-01`;
+    const end=`${rec.monthKey}-${String(endDay).padStart(2,'0')}`;
+    if(student && student.joiningDate){
+      const join=feeDateObj(student.joiningDate);
+      const monthStart=feeDateObj(start);
+      if(join && join>monthStart && join<=feeDateObj(end)) start=student.joiningDate;
+    }
+    return {start,end};
+  }
+  if(rec.type==='period' && rec.periodStart && rec.periodEnd){
+    return {start:rec.periodStart,end:rec.periodEnd};
+  }
+  return null;
+}
+
+function feeDayAfter(date){
+  return addDaysToDate(date,1);
+}
+
+function getCalendarFeeObligations(student,today){
+  const result=[];
+  const join=student.joiningDate;
+  const joinDate=feeDateObj(join), todayDate=feeDateObj(today);
+  if(!joinDate || !todayDate || todayDate<joinDate) return result;
+
+  let cursor=new Date(joinDate.getFullYear(),joinDate.getMonth(),1);
+  while(cursor<=todayDate){
+    const y=cursor.getFullYear(), m=cursor.getMonth()+1;
+    const monthStart=`${y}-${String(m).padStart(2,'0')}-01`;
+    const monthEnd=`${y}-${String(m).padStart(2,'0')}-${String(new Date(y,m,0).getDate()).padStart(2,'0')}`;
+    const start=joinDate>feeDateObj(monthStart)?join:monthStart;
+    const end=todayDate<feeDateObj(monthEnd)?today:monthEnd;
+    if(feeDateObj(end)>=feeDateObj(start)){
+      result.push({start,end,monthKey:monthKey(y,m)});
+    }
+    cursor.setMonth(cursor.getMonth()+1);
+  }
+  return result;
+}
+
+function pendingLabel(start,end,monthKeyValue){
+  const sd=feeDateObj(start), ed=feeDateObj(end);
+  if(!sd || !ed) return `${formatFeeShortDate(start)} – ${formatFeeShortDate(end)}`;
+  const monthStart=monthKeyValue+'-01';
+  const y=sd.getFullYear(), m=sd.getMonth()+1;
+  const monthEnd=`${y}-${String(m).padStart(2,'0')}-${String(new Date(y,m,0).getDate()).padStart(2,'0')}`;
+  if(start===monthStart && end===monthEnd) return feeMonthLabel(monthKeyValue);
+  return `${formatFeeShortDate(start)} – ${formatFeeShortDate(end)}`;
+}
+
+function subtractFeeRange(baseStart,baseEnd,cutStart,cutEnd){
+  const bs=feeDateObj(baseStart), be=feeDateObj(baseEnd);
+  const cs=feeDateObj(cutStart), ce=feeDateObj(cutEnd);
+  if(!bs || !be || !cs || !ce || be<bs) return [];
+  if(ce<bs || cs>be) return [{start:baseStart,end:baseEnd}];
+
+  const result=[];
+  if(bs<cs){
+    const leftEnd=addDaysToDate(cutStart,-1);
+    if(leftEnd && feeDateObj(leftEnd)>=bs) result.push({start:baseStart,end:leftEnd});
+  }
+  if(ce<be){
+    const rightStart=addDaysToDate(cutEnd,1);
+    if(rightStart && feeDateObj(rightStart)<=be) result.push({start:rightStart,end:baseEnd});
+  }
+  return result;
+}
+
+function getEffectiveCreditedRanges(student){
+  const effective=[];
+  getCreditedFeeRecords(student).forEach(({rec,index})=>{
+    const range=getCreditedRange(rec,student);
+    if(!range) return;
+
+    // The newest saved fee update wins wherever it overlaps an older one.
+    // Remove the new range from all older effective ranges first.
+    let remaining=[];
+    effective.forEach(item=>{
+      remaining.push(...subtractFeeRange(item.start,item.end,range.start,range.end));
+    });
+
+    remaining.push({
+      start:range.start,
+      end:range.end,
+      record:rec,
+      recordIndex:index
+    });
+
+    effective.length=0;
+    effective.push(...remaining);
+  });
+
+  return effective.sort((a,b)=>{
+    const d=String(a.start).localeCompare(String(b.start));
+    if(d) return d;
+    return String(a.end).localeCompare(String(b.end));
+  });
+}
+
+function getFeeStatusItems(student,today){
+  const obligations=getCalendarFeeObligations(student,today);
+  const effectiveCredited=getEffectiveCreditedRanges(student);
+  const items=[];
+
+  // Show only the effective credited portions. If a newer payment overlaps
+  // an older payment, the newer update wins and the older one is trimmed.
+  effectiveCredited.forEach(item=>{
+    const rec=item.record;
+    const days=daysBetweenDates(item.start,item.end);
+    const label=`${formatFeeShortDate(item.start)} – ${formatFeeShortDate(item.end)}${days ? ` (${days} days)` : ''}`;
+    items.push({
+      kind:rec?.type==='month'?'month':'period',
+      key:rec?.type==='month' ? `${rec.monthKey}:${item.start}:${item.end}` : `${item.start}:${item.end}`,
+      start:item.start,
+      end:item.end,
+      label,
+      record:rec,
+      recordIndex:item.recordIndex
+    });
+  });
+
+  // Generate pending only for dates not covered by any effective credited
+  // range. This guarantees that no date is skipped between joining and today.
+  obligations.forEach(ob=>{
+    let segments=[{start:ob.start,end:ob.end}];
+
+    effectiveCredited.forEach(cr=>{
+      const next=[];
+      segments.forEach(seg=>{
+        next.push(...subtractFeeRange(seg.start,seg.end,cr.start,cr.end));
+      });
+      segments=next;
+    });
+
+    segments.forEach(seg=>{
+      items.push({
+        kind:'pending',
+        key:`pending:${seg.start}:${seg.end}`,
+        start:seg.start,
+        end:seg.end,
+        monthKey:ob.monthKey,
+        label:pendingLabel(seg.start,seg.end,ob.monthKey),
+        record:null
+      });
+    });
+  });
+
+  return items.sort((a,b)=>{
+    const d=String(a.start||'').localeCompare(String(b.start||''));
+    if(d) return d;
+    if(a.record && !b.record) return -1;
+    if(!a.record && b.record) return 1;
+    return String(a.end||'').localeCompare(String(b.end||''));
+  });
+}
+
+function getCurrentFeeDisplayItems(student){
+  const today=getLocalFeeToday();
+  const items=getFeeStatusItems(student,today);
+  return items.slice(-2).reverse();
+}
+
+function feeItemStatusText(item, student){
+  const amount=Number(item.record?.amount || getKnownFeeAmount(student) || 0);
+  if(item.record && item.record.status==='credited'){
+    const first=`${item.label} Fee Credited`;
+    const second=`₹${amount}${item.record.date ? ` · ${formatFeeShortDate(item.record.date)}` : ''}${item.record.mode ? ` · ${item.record.mode}` : ''}`;
+    return `<span class="feeStatusLine feeCredited">${first}</span><span class="feeStatusMeta">${second}</span>`;
+  }
+  return `<span class="feeStatusLine feePending">${item.label} Fee Pending</span>${amount ? `<span class="feeStatusMeta">₹${amount}</span>` : ''}`;
+}
+
+function feeItemKey(item){
+  return item.kind==='month' ? `m:${item.key}` : `p:${item.start}:${item.end}`;
+}
+function renderFeesPage(){
+  const area=document.getElementById('feesArea');
+  if(!area) return;
+  if(!students.length){
+    area.innerHTML='<div class="emptyState"><div style="font-size:38px;margin-bottom:8px;">₹</div><b>No students yet</b><div style="margin-top:5px;">Add a student first.</div></div>';
+    return;
+  }
+  let html='';
+  students.forEach((s,index)=>{
+    if(!s.fees) s.fees=[];
+    const items=getCurrentFeeDisplayItems(s);
+    let feeLines='';
+    if(!items.length){
+      feeLines='<div class="studentMeta">No completed fee period yet</div>';
+    }else{
+      feeLines=items.map(item=>`<div class="feeStatusBlock">${feeItemStatusText(item,s)}</div>`).join('');
+    }
+    html+=`<div class="modernStudent" onclick="openFeeStatus(${index})" style="cursor:pointer;">
+      <div class="avatar" style="background:#fff4df;color:#e58b00;">₹</div>
+      <div class="studentMain"><b>${s.name}</b>${feeLines}</div>
+      <button class="miniBtn" onclick="event.stopPropagation();openFee(${index})">Update</button>
+    </div>`;
+  });
+  area.innerHTML=html;
+}
+
+function attendanceStatusInfo(status){
+  if(!status) return {code:"", label:""};
+  if(status === "Present") return {code:"P", label:"Present"};
+  if(status === "Absent ❌" || status === "Absent") return {code:"A", label:"Absent"};
+  if(status === "Leave") return {code:"L", label:"Leave"};
+  if(status === "Sunday") return {code:"S", label:"Sunday"};
+  if(status === "Sunday Manage ✅" || status === "Sunday Manage") return {code:"M", label:"Sunday Manage"};
+  if(String(status).startsWith("EH|")) return {code:"H", label:String(status).split("|").slice(1).join("|") || "Custom"};
+  return {code:"H", label:"Custom"};
+}
+
+function getAttendanceStatusForDate(index,date){
+  const s=students[index];
+  if(!s || !Array.isArray(s.attendance)) return "";
+  const record=s.attendance.find(a=>a.date===date);
+  return record ? record.status : "";
+}
+
+function renderAttendance(){
+  const attendanceArea = document.getElementById("attendanceArea");
+  if(!attendanceArea) return;
+  attendanceArea.innerHTML="";
+
+  const date=document.getElementById("attDate")?.value || "";
+
+  students.forEach((s,index)=>{
+    if(s.active === false) return;
+
+    const initial=(s.name||"?").trim().charAt(0).toUpperCase();
+    const avatarContent=s.photo
+      ? `<img src="${s.photo}" alt="Student photo">`
+      : initial;
+    const currentStatus=getAttendanceStatusForDate(index,date);
+    const selected=attendanceStatusInfo(currentStatus).code;
+
+    attendanceArea.innerHTML += `
+      <div class="attendanceRow">
+        <div class="attendanceAvatar" title="Student photo">${avatarContent}</div>
+        <div class="attendanceName" title="${s.name}">${s.name}</div>
+        <div class="attendanceChoices">
+          <button class="attendanceChoice ${selected==='P'?'selected statusP':''}" title="Present" onclick="setAttendanceStatus(${index},'P')">P</button>
+          <button class="attendanceChoice ${selected==='A'?'selected statusA':''}" title="Absent" onclick="setAttendanceStatus(${index},'A')">A</button>
+          <button class="attendanceChoice ${selected==='L'?'selected statusL':''}" title="Leave" onclick="setAttendanceStatus(${index},'L')">L</button>
+          <button class="attendanceChoice ${selected==='S'?'selected statusS':''}" title="Sunday" onclick="setAttendanceStatus(${index},'S')">S</button>
+          <button class="attendanceChoice ${selected==='M'?'selected statusM':''}" title="Sunday Manage" onclick="setAttendanceStatus(${index},'M')">M</button>
+          <button class="attendanceChoice ${selected==='H'?'selected statusH':''}" title="Custom" onclick="setAttendanceStatus(${index},'H')">H</button>
+        </div>
+      </div>`;
+  });
+}
+
+function setAttendanceStatus(index,code){
+  const date=document.getElementById("attDate").value;
+  if(!date) return;
+  const s=students[index];
+  if(!s || s.active === false) return;
+  if(!s.attendance) s.attendance=[];
+
+  const existing=s.attendance.find(a=>a.date===date);
+
+  // Clicking the already-selected status again removes that attendance.
+  // For Custom (H), this also prevents the prompt from opening again.
+  if(existing && attendanceStatusInfo(existing.status).code===code){
+    s.attendance=s.attendance.filter(a=>a.date!==date);
+    saveLocalData(true);
+    renderAttendance();
+    renderReports();
+    return;
+  }
+
+  let status="Present";
+  if(code==='A') status="Absent ❌";
+  if(code==='L') status="Leave";
+  if(code==='S') status="Sunday";
+  if(code==='M') status="Sunday Manage ✅";
+  if(code==='H'){
+    const text=prompt("Enter Custom Attendance","");
+    if(text===null || !text.trim()) return;
+    status="EH|"+text.trim();
+  }
+
+  if(existing){
+    existing.status=status;
+  }else{
+    s.attendance.push({date:date,status:status});
+  }
+
+  saveLocalData(true);
+  renderAttendance();
+  renderReports();
+}
+
+function render(){
+  renderAttendance();
+  renderReports();
+  renderStudentsPage();
+  renderFeesPage();
+}
+
+function customStatus(index){
+  const select = document.getElementById("status"+index);
+  if(!select) return;
+
+  if(select.value=="Custom"){
+    const text = prompt("Enter Extra Holiday");
+    if(text){
+      select.dataset.customStatus = text;
+    }else{
+      select.value="Present";
+      delete select.dataset.customStatus;
+    }
+  }
+}
+
+function saveAttendance(){
+  const date = document.getElementById("attDate").value;
+  if(!date){
+    alert("Select Date");
+    return;
+  }
+
+  students.forEach((s,index)=>{
+    if(s.active === false) return;
+
+    const select = document.getElementById("status"+index);
+    if(!select) return;
+
+    let status = select.value;
+
+    if(status=="Custom"){
+      const customText = select.dataset.customStatus;
+      status = customText ? "EH|" + customText : "Custom";
+    }
+
+    const existing = s.attendance.find(a => a.date === date);
+    if(existing){
+      existing.status = status;
+    }else{
+      s.attendance.push({date: date, status: status});
+    }
+  });
+
+  saveLocalData(true);
+  renderReports();
+  alert("Attendance Saved");
+}
+
 function populateReportYears(){
   const yearSelect = document.getElementById("reportYear");
   if(!yearSelect) return;
@@ -753,7 +1952,6 @@ function populateReportYears(){
   const currentYear = new Date().getFullYear();
   const oldYear = yearSelect.value;
 
-  // Fixed year range: 2025 to 2035
   yearSelect.innerHTML = "";
   for(let year = 2025; year <= 2035; year++){
     const option = document.createElement("option");
@@ -771,16 +1969,32 @@ function populateReportYears(){
   }
 }
 
-function renderReports(){  
-  let reportArea = document.getElementById("reportArea");  
+let reportSlideIndex = 0;
+
+function renderReports(){
+  const reportArea = document.getElementById("reportArea");
+  if(!reportArea) return;
   reportArea.innerHTML="";
 
   populateReportYears();
 
-  let selectedMonth = document.getElementById("reportMonth").value;
-  let selectedYear = document.getElementById("reportYear").value;
+  const selectedMonth = document.getElementById("reportMonth").value;
+  const selectedYear = document.getElementById("reportYear").value;
+  const reportStudents = students.map((s,index)=>({s,index}));
 
-  students.forEach((s,index)=>{  
+  if(reportStudents.length===0){
+    reportArea.innerHTML=`<div class="modernPanel"><p style="text-align:center;">No students found</p></div>`;
+    return;
+  }
+
+  if(reportSlideIndex < 0) reportSlideIndex=0;
+  if(reportSlideIndex >= reportStudents.length) reportSlideIndex=reportStudents.length-1;
+
+  let slidesHtml = "";
+
+  reportStudents.forEach((item,slideIndex)=>{
+    const s=item.s;
+    const index=item.index;
     if(!s.attendance) s.attendance=[];
     if(!s.fees) s.fees=[];
 
@@ -788,7 +2002,7 @@ function renderReports(){
     let sundayManage = 0, sunday = 0, extraHoliday = 0;
 
     s.attendance.forEach(a=>{
-      let parts = a.date.split("-");
+      const parts = a.date.split("-");
       if(parts[0] === selectedYear && parts[1] === selectedMonth){
         if(a.status=="Present") present++;
         else if(a.status=="Sunday") sunday++;
@@ -804,35 +2018,13 @@ function renderReports(){
     absent = Math.max(0, absent - sundayManage);
 
     let attendanceHtml = "";
-    let feeInfo = "";
-
-    s.fees.forEach(f=>{
-      let parts = f.date.split("-");
-      if(parts[0] === selectedYear && parts[1] === selectedMonth){
-        const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-        let feeMonth = parseInt(parts[1]);
-        let previousMonthName = monthNames[(feeMonth + 10) % 12];
-        let formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
-
-        feeInfo =
-        `<span style="color:green;font-weight:bold;">
-        ${previousMonthName} Fee Status : Credited
-        </span><br>
-        ₹${f.amount} via ${f.mode} on ${formattedDate}`;
-      }
-    });
-
-    if(feeInfo === ""){
-      feeInfo = `<span style="color:#721c24;font-weight:bold;">Fee Status : Pending</span>`;
-    }
-
-    let sortedAttendance = [...s.attendance];
+    const sortedAttendance = [...s.attendance];
     sortedAttendance.sort((a,b)=>new Date(a.date)-new Date(b.date));
 
     sortedAttendance.forEach(a=>{
-      let parts = a.date.split("-");
+      const parts = a.date.split("-");
       if(parts[0] === selectedYear && parts[1] === selectedMonth){
-        let day = parts[2];
+        const day = parts[2];
         let color = "#000";
         if(a.status=="Present") color="green";
         else if(a.status=="Absent ❌") color="red";
@@ -841,10 +2033,11 @@ function renderReports(){
         else if(a.status=="Sunday Manage ✅") color="green";
         else color="#ff8800";
 
-        let displayStatus = a.status.startsWith("EH|") ? a.status.split("|")[1] : a.status;
+        const displayStatus = a.status.startsWith("EH|") ? a.status.split("|").slice(1).join("|") : a.status;
+        const safeDate = a.date.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
 
         attendanceHtml +=
-        `<p onclick="openAttendanceStatus(${index},'${a.date.replace(/'/g,"\\'")}')" style="
+        `<p onclick="openAttendanceStatus(${index},'${safeDate}')" style="
         width:220px;
         margin:auto;
         text-align:left;
@@ -860,21 +2053,11 @@ function renderReports(){
 
     if(attendanceHtml==="") attendanceHtml="<p>No attendance found</p>";
 
-    reportArea.innerHTML += `
-    <div class="student">
-      <div style="margin-bottom:10px;">
-        <h3 onclick="openStudentDetails(${index})" style="color:#0d6efd;font-weight:700;font-size:20px;margin:0;cursor:pointer;text-decoration:underline;">${s.name}</h3>
-      </div>
-
-      <div style="display:flex;gap:5px;margin-bottom:10px;flex-wrap:nowrap;">
-        <button class="feeBtn" onclick="openFee(${index})" style="padding:6px 5px;min-width:0;flex:1;">Fee</button>
-        <button class="feeBtn" onclick="editStudent(${index})" style="padding:6px 5px;min-width:0;flex:1;">Edit</button>
-        <button class="feeBtn" onclick="downloadPDF(${index})" style="padding:6px 5px;min-width:0;flex:1;">Report</button>
-        <button class="deleteBtn" onclick="deleteStudent(${index})" style="padding:6px 5px;min-width:0;flex:1;">Delete</button>
-      </div>
-
-      <div class="status" onclick="openFeeStatus(${index})" style="cursor:pointer;">
-        ${feeInfo}
+    slidesHtml += `
+    <div class="student reportSlide ${slideIndex===reportSlideIndex?'active':''}" data-report-slide="${slideIndex}">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
+        <h3 style="color:#0d6efd;font-weight:700;font-size:20px;margin:0;cursor:pointer;text-decoration:underline;" onclick="openStudentDetails(${index})">${s.name}</h3>
+        <button class="feeBtn" onclick="downloadPDF(${index})" style="padding:7px 10px;min-width:0;white-space:nowrap;">Print Report</button>
       </div>
 
       ${attendanceHtml}
@@ -886,149 +2069,280 @@ function renderReports(){
     </div>`;
   });
 
-  localStorage.setItem("tuitionData", JSON.stringify(students));
+  const optionsHtml = reportStudents.map((item,i)=>
+    `<option value="${i}" ${i===reportSlideIndex?'selected':''}>${i+1} — ${item.s.name}</option>`
+  ).join("");
+
+  reportArea.innerHTML = `
+    <div class="reportSlider" id="reportSlider">
+      ${slidesHtml}
+    </div>
+    <div class="reportSlideNav">
+      <button class="reportSlideBtn" onclick="changeReportSlide(-1)" aria-label="Previous student">‹</button>
+      <select id="reportStudentNumber" class="reportSlideNumber" onchange="goToReportSlide(this.value)" aria-label="Student number">
+        ${optionsHtml}
+      </select>
+      <span style="font-weight:700;color:#555;">/ ${reportStudents.length}</span>
+      <button class="reportSlideBtn" onclick="changeReportSlide(1)" aria-label="Next student">›</button>
+    </div>
+    <div class="reportSwipeHint">Swipe left/right to change student</div>`;
+
+  setupReportSwipe();
+}
+
+function changeReportSlide(direction){
+  const total = document.querySelectorAll("#reportSlider .reportSlide").length;
+  if(!total) return;
+  reportSlideIndex = (reportSlideIndex + direction + total) % total;
+  renderReports();
+}
+
+function goToReportSlide(value){
+  const total = document.querySelectorAll("#reportSlider .reportSlide").length;
+  if(!total) return;
+  const index = Number(value);
+  if(!Number.isInteger(index) || index<0 || index>=total) return;
+  reportSlideIndex=index;
+  renderReports();
+}
+
+function setupReportSwipe(){
+  const slider=document.getElementById("reportSlider");
+  if(!slider) return;
+
+  let startX=0;
+  let startY=0;
+  let tracking=false;
+
+  slider.addEventListener("touchstart",function(e){
+    if(!e.touches || !e.touches[0]) return;
+    startX=e.touches[0].clientX;
+    startY=e.touches[0].clientY;
+    tracking=true;
+  },{passive:true});
+
+  slider.addEventListener("touchend",function(e){
+    if(!tracking || !e.changedTouches || !e.changedTouches[0]) return;
+    tracking=false;
+    const endX=e.changedTouches[0].clientX;
+    const endY=e.changedTouches[0].clientY;
+    const dx=endX-startX;
+    const dy=endY-startY;
+
+    if(Math.abs(dx)<60 || Math.abs(dx)<=Math.abs(dy)) return;
+    if(dx<0) changeReportSlide(1);
+    else changeReportSlide(-1);
+  },{passive:true});
+}
+
+function populateFeeMonthSelect(student){
+  const select=document.getElementById('feeMonthSelect');
+  if(!select) return;
+  const today=new Date();
+  const join=feeDateObj(student.joiningDate) || new Date(today.getFullYear(),today.getMonth(),1);
+  const startYear=Math.max(2025,join.getFullYear());
+  const endYear=Math.max(2035,today.getFullYear()+1);
+  select.innerHTML='';
+  for(let y=startYear;y<=endYear;y++){
+    for(let m=1;m<=12;m++){
+      const opt=document.createElement('option');
+      opt.value=monthKey(y,m);
+      opt.textContent=feeMonthLabel(opt.value);
+      select.appendChild(opt);
+    }
+  }
+  const target=monthKey(today.getFullYear(),today.getMonth()+1);
+  if([...select.options].some(o=>o.value===target)) select.value=target;
+}
+
+function updateFeePeriodDays(){
+  const box=document.getElementById('feePeriodDays');
+  const start=document.getElementById('feePeriodStart')?.value;
+  const end=document.getElementById('feePeriodEnd')?.value;
+  if(!box) return;
+  if(!start || !end){
+    box.textContent='';
+    return;
+  }
+  const days=daysBetweenDates(start,end);
+  box.textContent=days>0 ? `${days} day${days===1?'':'s'} fee interval` : 'End date must be after start date';
+}
+
+function selectFeeUpdateMode(mode){
+  const monthBtn=document.getElementById('feeMonthModeBtn');
+  const periodBtn=document.getElementById('feePeriodModeBtn');
+  const monthFields=document.getElementById('feeMonthFields');
+  const periodFields=document.getElementById('feePeriodFields');
+  if(!monthBtn||!periodBtn||!monthFields||!periodFields) return;
+  const isMonth=mode==='month';
+  monthFields.style.display=isMonth?'block':'none';
+  periodFields.style.display=isMonth?'none':'block';
+  monthBtn.classList.toggle('active',isMonth);
+  periodBtn.classList.toggle('active',!isMonth);
+  document.getElementById('feePopup').dataset.updateMode=mode;
 }
 
 function openFee(index){
-
-currentStudent=index;
-
-document.getElementById(
-"feePopup"
-).style.display="flex";
-
+  currentStudent=index;
+  const st=students[index];
+  if(!st) return;
+  if(!st.fees) st.fees=[];
+  if(typeof st.monthlyFee==='undefined') st.monthlyFee=0;
+  if(!st.feeCycle) st.feeCycle='month';
+  if(!st.joiningDate) st.joiningDate='';
+  const title=document.getElementById('feeUpdateTitle');
+  if(title) title.textContent=st.name;
+  populateFeeMonthSelect(st);
+  document.getElementById('feeMode').value='';
+  document.getElementById('feeAmount').value='';
+  document.getElementById('feeDate').value=new Date().toISOString().slice(0,10);
+  document.getElementById('feePopup').dataset.usedSavedInterval='false';
+  document.getElementById('feePeriodStart').value=st.joiningDate || '';
+  document.getElementById('feePeriodEnd').value=st.joiningDate ? addDaysToDate(st.joiningDate,30) : '';
+  document.getElementById('feePeriodStart').onchange=updateFeePeriodDays;
+  document.getElementById('feePeriodEnd').onchange=updateFeePeriodDays;
+  selectFeeUpdateMode(getFeeCycleMode(st));
+  updateFeePeriodDays();
+  document.getElementById('feePopup').style.display='flex';
 }
 
 function closeFeePopup(){
-
-document.getElementById(
-"feePopup"
-).style.display = "none";
-
+  document.getElementById('feePopup').style.display='none';
 }
 
-
 function openFeeStatus(index){
-  currentStudent = index;
-  document.getElementById("feeStatusPopup").style.display = "flex";
+  currentStudent=index;
+  const st=students[index];
+  if(!st) return;
+  renderFeeDetails(st);
+  document.getElementById('feeStatusPopup').style.display='flex';
 }
 
 function closeFeeStatus(){
-  document.getElementById("feeStatusPopup").style.display = "none";
+  document.getElementById('feeStatusPopup').style.display='none';
 }
 
-function deleteFeeStatus(){
-  if(!confirm("Are you sure you want to delete this fee status?")) return;
+function renderFeeDetails(st){
+  const content=document.getElementById('feeDetailsContent');
+  if(!content) return;
+  const year=Number(document.getElementById('feeDetailsYear')?.value || new Date().getFullYear());
 
-  let selectedMonth = document.getElementById("reportMonth").value;
-  let selectedYear = document.getElementById("reportYear").value;
-  let student = students[currentStudent];
-
-  if(!student || !student.fees) return;
-
-  student.fees = student.fees.filter(f=>{
-    let parts = f.date.split("-");
-    return !(parts[0] === selectedYear && parts[1] === selectedMonth);
-  });
-
-  localStorage.setItem("tuitionData", JSON.stringify(students));
-  closeFeeStatus();
-  renderReports();
-}
-
-let selectedAttendanceStudent = null;
-let selectedAttendanceDate = null;
-
-function openAttendanceStatus(index,date){
-  selectedAttendanceStudent = index;
-  selectedAttendanceDate = date;
-
-  let student = students[index];
-  let record = student && (student.attendance || []).find(a=>a.date===date);
-  let statusText = record ? (record.status.startsWith("EH|") ? record.status.split("|")[1] : record.status) : "";
-
-  document.getElementById("attendanceStatusText").textContent =
-    `${date.split("-")[2]} - ${statusText}`;
-  document.getElementById("attendanceStatusPopup").style.display = "flex";
-}
-
-function closeAttendanceStatus(){
-  document.getElementById("attendanceStatusPopup").style.display = "none";
-  selectedAttendanceStudent = null;
-  selectedAttendanceDate = null;
-}
-
-function deleteAttendanceStatus(){
-  if(!confirm("Are you sure you want to delete this attendance?")) return;
-
-  let student = students[selectedAttendanceStudent];
-  if(student && student.attendance){
-    student.attendance = student.attendance.filter(
-      a => a.date !== selectedAttendanceDate
-    );
-    localStorage.setItem("tuitionData", JSON.stringify(students));
+  if(!st.joiningDate){
+    content.innerHTML=`<div class="feeDetailsName">${st.name}</div>
+      <div class="feeDetailsSectionTitle">Tuition Joining Date</div>
+      <div style="font-size:13px;color:#606775;margin-bottom:8px;">Joining date is not set yet.</div>
+      <button class="popupSave" onclick="editJoiningDate()">Set Joining Date</button>`;
+    return;
   }
 
-  closeAttendanceStatus();
+  const today=getLocalFeeToday();
+  const items=getFeeStatusItems(st,today);
+
+  const yearItems=items.filter(item=>{
+    const refDate=item.end||item.start;
+    return refDate && (refDate.startsWith(String(year)) || item.start?.startsWith(String(year)));
+  }).sort((a,b)=>String(a.start||'').localeCompare(String(b.start||'')));
+
+  let rows='';
+  yearItems.forEach(item=>{
+    const rec=item.record;
+    const amount=Number(rec?.amount || getKnownFeeAmount(st) || 0);
+    if(rec?.status==='credited'){
+      rows+=`<div class="feeDetailRow"><b>${item.label}</b><br><span class="feeCredited">Credited</span> · ₹${amount}<br><span style="font-size:12px;color:#606775;">${formatFeeShortDate(rec.date)} · ${rec.mode||'Mode not set'}</span><button class="miniBtn red" style="float:right;margin-top:-25px;" onclick="deleteFeeRecord(${st.fees.indexOf(rec)})">🗑️</button></div>`;
+    }else{
+      rows+=`<div class="feeDetailRow"><b>${item.label}</b><br><span class="feePending">Pending</span>${amount ? ` · ₹${amount}` : ''}</div>`;
+    }
+  });
+
+  if(!yearItems.length) rows='<div style="padding:10px 0;color:#666;">No fee details in this year yet.</div>';
+
+  const cycleText=getFeeCycleMode(st)==='month'?'Calendar Month':'Fee Period';
+  content.innerHTML=`<div class="feeDetailsName">${st.name}</div><div class="feeDetailsJoining"><b>Tuition Joining Date:</b> ${formatFeeShortDate(st.joiningDate)} <button class="miniBtn" style="margin-left:6px;padding:5px 8px;" onclick="editJoiningDate()">Edit</button></div><div class="feeDetailsSectionTitle">Monthly Details</div><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><select id="feeDetailsYear" onchange="renderFeeDetails(students[currentStudent])" style="margin:0;flex:1;"></select><span style="font-size:12px;color:#606775;">${cycleText}</span></div>${rows}`;
+
+  const ys=document.getElementById('feeDetailsYear');
+  if(ys){
+    const current=new Date().getFullYear();
+    const joinYear=feeDateObj(st.joiningDate)?.getFullYear() || current;
+    for(let y=Math.max(2025,joinYear);y<=Math.max(2035,current+1);y++) ys.innerHTML+=`<option value="${y}">${y}</option>`;
+    ys.value=String(year);
+  }
+}
+function editJoiningDate(){
+  const st=students[currentStudent];
+  if(!st) return;
+  const picker=document.getElementById('joiningDatePicker');
+  if(!picker) return;
+  picker.value=st.joiningDate || new Date().toISOString().slice(0,10);
+  if(typeof picker.showPicker==='function'){
+    try{ picker.showPicker(); return; }catch(e){}
+  }
+  picker.click();
+}
+
+function saveJoiningDateFromPicker(value){
+  const st=students[currentStudent];
+  if(!st || !value) return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(value) || !feeDateObj(value)){
+    alert('Please select a valid date.');
+    return;
+  }
+  st.joiningDate=value;
+  saveLocalData(true);
+  renderFeesPage();
+  renderFeeDetails(st);
+}
+
+function deleteFeeRecord(index){
+  const st=students[currentStudent];
+  if(!st || !st.fees || !st.fees[index]) return;
+  if(!confirm('Delete this fee record?')) return;
+  st.fees.splice(index,1);
+  saveLocalData(true);
+  renderFeesPage();
   renderReports();
+  renderFeeDetails(st);
 }
 
 function saveFee(){
+  const st=students[currentStudent];
+  if(!st) return;
+  const mode=document.getElementById('feeMode').value;
+  const amount=document.getElementById('feeAmount').value;
+  const date=document.getElementById('feeDate').value;
+  const updateMode=document.getElementById('feePopup').dataset.updateMode || 'month';
+  if(!mode || !amount || !date){ alert('Fill all payment details'); return; }
+  if(Number(amount)<=0){ alert('Amount must be greater than 0'); return; }
+  if(!st.fees) st.fees=[];
 
- let mode =  
-document.getElementById(  
-"feeMode"  
-).value;  
-  
-let amount =  
-document.getElementById(  
-"feeAmount"  
-).value;  
-  
-let date =  
-document.getElementById(  
-"feeDate"  
-).value;  
-  
-if(!mode || !amount || !date){  
-  
-alert("Fill all details");  
-  
-return;  
-  
-}  
-  
-let existingFee = students[currentStudent].fees.find(
-f => f.date === date
-);
-
-if(existingFee){
-
-existingFee.amount = amount;
-existingFee.mode = mode;
-
-}else{
-
-students[currentStudent].fees.push({
-amount: amount,
-mode: mode,
-date: date
-});
+  let record;
+  if(updateMode==='month'){
+    const key=document.getElementById('feeMonthSelect').value;
+    if(!key){ alert('Select Fee Month'); return; }
+    record={type:'month',monthKey:key,status:'credited',amount:String(amount),mode,date,updatedAt:Date.now()};
+    const old=st.fees.find(f=>f.type==='month' && f.monthKey===key);
+    if(old) Object.assign(old,record); else st.fees.push(record);
+    st.feeCycle='month';
+  }else{
+    const start=document.getElementById('feePeriodStart').value;
+    const end=document.getElementById('feePeriodEnd').value;
+    if(!start || !end){ alert('Select Fee Period'); return; }
+    if(feeDateObj(end)<feeDateObj(start)){ alert('End date must be after start date'); return; }
+    const days=daysBetweenDates(start,end);
+    record={type:'period',periodStart:start,periodEnd:end,days,status:'credited',amount:String(amount),mode,date,updatedAt:Date.now()};
+    const old=st.fees.find(f=>f.type==='period' && f.periodStart===start && f.periodEnd===end);
+    if(old) Object.assign(old,record); else st.fees.push(record);
+    st.feeCycle='period';
 
   }
-  
-document.getElementById(  
-"feePopup"  
-).style.display="none";  
-  
-renderReports();  
-  
-}  
-  let selectedStudentDetails = null;
+  saveLocalData(true);
+  closeFeePopup();
+  renderFeesPage();
+  renderReports();
+}
 
 function openStudentDetails(index){
   selectedStudentDetails = index;
-  let st = students[index];
+  const st = students[index];
   if(typeof st.mobile === "undefined") st.mobile = "";
   if(typeof st.address === "undefined") st.address = "";
   document.getElementById("studentDetailsName").textContent = st.name;
@@ -1039,18 +2353,19 @@ function openStudentDetails(index){
 }
 
 function updateStudentActiveButton(){
-  let st = students[selectedStudentDetails];
-  let btn = document.getElementById("studentActiveBtn");
+  const st = students[selectedStudentDetails];
+  const btn = document.getElementById("studentActiveBtn");
   btn.textContent = st.active === false ? "Activate" : "Inactive";
   btn.style.background = st.active === false ? "#28a745" : "#6c757d";
 }
 
 function renderStudentDetails(){
-  let st = students[selectedStudentDetails];
-  let hasDetails = !!(st.mobile || st.address);
-  let view = document.getElementById("studentDetailsView");
-  let form = document.getElementById("studentDetailsForm");
-  let editBtn = document.getElementById("studentDetailsEditBtn");
+  const st = students[selectedStudentDetails];
+  const hasDetails = !!(st.mobile || st.address);
+  const view = document.getElementById("studentDetailsView");
+  const form = document.getElementById("studentDetailsForm");
+  const editBtn = document.getElementById("studentDetailsEditBtn");
+
   if(hasDetails){
     view.innerHTML = `<div style="margin-bottom:12px;"><strong>Mobile Number:</strong><br>${st.mobile || "Not added"}</div><div><strong>Address:</strong><br>${st.address || "Not added"}</div>`;
     form.style.display = "none";
@@ -1065,7 +2380,7 @@ function renderStudentDetails(){
 }
 
 function editStudentDetails(){
-  let st = students[selectedStudentDetails];
+  const st = students[selectedStudentDetails];
   document.getElementById("studentMobile").value = st.mobile || "";
   document.getElementById("studentAddress").value = st.address || "";
   document.getElementById("studentDetailsView").style.display = "none";
@@ -1074,21 +2389,25 @@ function editStudentDetails(){
 }
 
 function saveStudentDetails(){
-  let st = students[selectedStudentDetails];
+  const st = students[selectedStudentDetails];
   st.mobile = document.getElementById("studentMobile").value.trim();
   st.address = document.getElementById("studentAddress").value.trim();
-  localStorage.setItem("tuitionData", JSON.stringify(students));
+  saveLocalData(true);
   document.getElementById("studentDetailsView").style.display = "block";
   renderStudentDetails();
 }
 
 function toggleStudentActiveFromDetails(){
-  let st = students[selectedStudentDetails];
-  let action = st.active === false ? "activate" : "deactivate";
-  let message = action === "deactivate" ? `Mark ${st.name} as Inactive?\n\nThis student will stop appearing in Daily Attendance. Previous attendance and fee data will remain safe.` : `Mark ${st.name} as Active?\n\nThis student will appear again in Daily Attendance.`;
+  const st = students[selectedStudentDetails];
+  const action = st.active === false ? "activate" : "deactivate";
+  const message = action === "deactivate"
+    ? `Mark ${st.name} as Inactive?\n\nThis student will stop appearing in Daily Attendance. Previous attendance and fee data will remain safe.`
+    : `Mark ${st.name} as Active?\n\nThis student will appear again in Daily Attendance.`;
+
   if(!confirm(message)) return;
+
   st.active = action === "activate";
-  localStorage.setItem("tuitionData", JSON.stringify(students));
+  saveLocalData(true);
   updateStudentActiveButton();
   render();
 }
@@ -1099,27 +2418,124 @@ function closeStudentDetails(){
 }
 
 function editStudent(index){
-
-let newName = prompt(
-"Edit Student Name",
-students[index].name
-);
-
-if(newName){
-
-students[index].name = newName;
-
-render();
-
+  const newName = prompt("Edit Student Name", students[index].name);
+  if(newName){
+    students[index].name = newName;
+    saveLocalData(true);
+    render();
+  }
 }
 
+function handleStudentPhotoBoxClick(index){
+  const st=students[index];
+  if(!st) return;
+  if(st.photo){
+    openStudentPhoto(index);
+  }else{
+    const input=document.getElementById("studentPhotoInput"+index);
+    if(input) input.click();
+  }
 }
+
+function openStudentPhoto(index){
+  const st=students[index];
+  if(!st || !st.photo) return;
+  selectedPhotoStudent=index;
+  document.getElementById("studentPhotoLarge").src=st.photo;
+  document.getElementById("studentPhotoTitle").textContent=st.name||"Student";
+  document.getElementById("studentPhotoViewer").style.display="flex";
+}
+
+function closeStudentPhoto(){
+  const viewer=document.getElementById("studentPhotoViewer");
+  if(viewer) viewer.style.display="none";
+  selectedPhotoStudent=null;
+}
+
+function changeStudentPhoto(){
+  if(selectedPhotoStudent===null) return;
+  const input=document.getElementById("studentPhotoInput"+selectedPhotoStudent);
+  if(input) input.click();
+}
+
+function removeStudentPhoto(){
+  if(selectedPhotoStudent===null) return;
+  const index=selectedPhotoStudent;
+  const st=students[index];
+  if(!st || !st.photo) return;
+
+  if(!confirm("Remove this student's photo?")) return;
+
+  st.photo="";
+  saveLocalData(true);
+  closeStudentPhoto();
+  renderStudentsPage();
+}
+
+function uploadStudentPhoto(event,index){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+
+  if(!file.type.startsWith("image/")){
+    alert("Please select an image.");
+    event.target.value="";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const maxSize = 300;
+      let width = img.width;
+      let height = img.height;
+
+      if(width > height){
+        if(width > maxSize){
+          height = Math.round(height * maxSize / width);
+          width = maxSize;
+        }
+      }else{
+        if(height > maxSize){
+          width = Math.round(width * maxSize / height);
+          height = maxSize;
+        }
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img,0,0,width,height);
+
+      students[index].photo = canvas.toDataURL("image/jpeg",0.8);
+      saveLocalData(true);
+      renderStudentsPage();
+
+      if(selectedPhotoStudent === index){
+        const large=document.getElementById("studentPhotoLarge");
+        const title=document.getElementById("studentPhotoTitle");
+        const viewer=document.getElementById("studentPhotoViewer");
+        if(large) large.src=students[index].photo;
+        if(title) title.textContent=students[index].name || "Student";
+        if(viewer) viewer.style.display="flex";
+      }
+    };
+    img.onerror = function(){
+      alert("Unable to load this image.");
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  event.target.value="";
+}
+
 function downloadPDF(index){
-  let s = students[index];
-  let selectedMonth = document.getElementById("reportMonth").value;
-  let selectedYear = document.getElementById("reportYear").value;
+  const s = students[index];
+  const selectedMonth = document.getElementById("reportMonth").value;
+  const selectedYear = document.getElementById("reportYear").value;
 
-  let monthNames = [
+  const monthNames = [
     "January","February","March","April","May","June",
     "July","August","September","October","November","December"
   ];
@@ -1133,11 +2549,11 @@ function downloadPDF(index){
   let feeFound = false;
 
   (s.fees || []).forEach(f=>{
-    let parts = f.date.split("-");
+    const parts = f.date.split("-");
     if(parts[0] === selectedYear && parts[1] === selectedMonth){
       feeFound = true;
-      let formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
-      let previousMonthName = monthNames[(parseInt(selectedMonth)+10)%12];
+      const formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      const previousMonthName = monthNames[(parseInt(selectedMonth)+10)%12];
 
       reportHtml += `
       <h3>Fee Details</h3>
@@ -1157,11 +2573,11 @@ function downloadPDF(index){
   let foundAttendance=false;
 
   (s.attendance || []).forEach(a=>{
-    let parts = a.date.split("-");
+    const parts = a.date.split("-");
     if(parts[0] === selectedYear && parts[1] === selectedMonth){
       foundAttendance=true;
-      let day=parts[2];
-      let displayStatus=a.status.startsWith("EH|") ? a.status.split("|")[1] : a.status;
+      const day=parts[2];
+      const displayStatus=a.status.startsWith("EH|") ? a.status.split("|")[1] : a.status;
 
       reportHtml += `<p>${day} - ${displayStatus}</p>`;
 
@@ -1189,7 +2605,7 @@ function downloadPDF(index){
 
   if(!foundAttendance) reportHtml += `<p>No attendance found</p>`;
 
-  let reportWindow=window.open("","_blank");
+  const reportWindow=window.open("","_blank");
   reportWindow.document.write(`
   <html><head>
   <title>${s.name}_${monthNames[parseInt(selectedMonth)-1]}_${selectedYear}_Report</title>
@@ -1201,305 +2617,580 @@ function downloadPDF(index){
       </button>
     </div>
     ${reportHtml}
-  
-<div class="card" style="text-align:center;">
-  <div style="font-weight:700;font-size:18px;">Tuition Attendance Manager</div>
-  <div style="margin-top:6px;font-size:13px;color:#666;">Developed by Aayush Kumar</div>
-  <div style="margin-top:10px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
-    <a href="whatsapp://send?phone=919279060820"
-       onclick="contactDeveloper(event)"
-       style="text-decoration:none;color:#25D366;font-weight:600;font-size:13px;">
-      📞 Contact Developer
-    </a>
-    <a href="mailto:aayushaniket1722@gmail.com"
-       style="text-decoration:none;color:#0d6efd;font-weight:600;font-size:13px;">
-      ✉️ Email
-    </a>
-  </div>
-</div>
+
+    <div class="card" style="text-align:center;">
+      <div style="font-weight:700;font-size:18px;">Tuition Attendance Manager</div>
+    </div>
 
 </body></html>`);
   reportWindow.document.close();
 }
 
 function checkLock(){
+  const savedPin = localStorage.getItem(getPinKey());
+  const lockSwitch = document.getElementById("lockSwitch");
+  const lockScreen = document.getElementById("lockScreen");
 
-let savedPin =
-localStorage.getItem("appPin");
+  if(savedPin){
+    lockSwitch.checked = true;
+    lockScreen.style.display = "flex";
 
-if(savedPin){
-
-document.getElementById("lockScreen")
-.style.display = "flex";
-
+    // If fingerprint unlock has already been enabled, immediately ask
+    // the phone for biometric verification when the lock screen opens.
+    const credentialId = localStorage.getItem(fingerprintStorageKey());
+    if(credentialId && fingerprintSupported()){
+      setTimeout(() => {
+        unlockWithFingerprint(true);
+      }, 150);
+    }
+  }else{
+    lockSwitch.checked = false;
+    lockScreen.style.display = "none";
+  }
 }
 
+function base64UrlFromBytes(bytes){
+  let binary="";
+  bytes.forEach(b=>binary+=String.fromCharCode(b));
+  return btoa(binary).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"");
+}
+
+function bytesFromBase64Url(str){
+  const base64=str.replace(/-/g,"+").replace(/_/g,"/")+"===".slice((str.length+3)%4);
+  const binary=atob(base64);
+  return Uint8Array.from(binary,c=>c.charCodeAt(0));
+}
+
+function randomBytes(length){
+  const a=new Uint8Array(length);
+  crypto.getRandomValues(a);
+  return a;
+}
+
+function fingerprintStorageKey(){
+  return "appFingerprintCredential_v1_" + (currentAccountKey || "default");
+}
+
+function fingerprintSupported(){
+  return window.isSecureContext && !!window.PublicKeyCredential && !!navigator.credentials;
+}
+
+async function registerFingerprint(){
+  if(!fingerprintSupported()) return false;
+  try{
+    const credential=await navigator.credentials.create({
+      publicKey:{
+        challenge:randomBytes(32),
+        rp:{name:"Tuition Attendance Manager"},
+        user:{
+          id:randomBytes(16),
+          name:(localStorage.getItem("googleEmail") || "tuition-user"),
+          displayName:"Tuition Attendance Manager"
+        },
+        pubKeyCredParams:[{type:"public-key",alg:-7},{type:"public-key",alg:-257}],
+        authenticatorSelection:{
+          authenticatorAttachment:"platform",
+          userVerification:"required",
+          residentKey:"preferred"
+        },
+        timeout:60000,
+        attestation:"none"
+      }
+    });
+    if(!credential) return false;
+    localStorage.setItem(fingerprintStorageKey(),base64UrlFromBytes(new Uint8Array(credential.rawId)));
+    return true;
+  }catch(error){
+    console.warn("Fingerprint setup cancelled/unavailable:",error);
+    return false;
+  }
+}
+
+async function unlockWithFingerprint(autoStart=false){
+  const credentialId=localStorage.getItem(fingerprintStorageKey());
+  if(!credentialId){
+    // No fingerprint credential exists yet. Keep the PIN screen available.
+    return;
+  }
+
+  if(!fingerprintSupported()){
+    if(!autoStart) alert("Fingerprint/biometric unlock is not available in this browser. Use your PIN.");
+    return;
+  }
+
+  try{
+    const assertion=await navigator.credentials.get({
+      publicKey:{
+        challenge:randomBytes(32),
+        allowCredentials:[{type:"public-key",id:bytesFromBase64Url(credentialId)}],
+        userVerification:"required",
+        timeout:60000
+      }
+    });
+    if(assertion){
+      document.getElementById("lockSwitch").checked=true;
+      document.getElementById("lockScreen").style.display="none";
+      document.getElementById("unlockPin").value="";
+    }
+  }catch(error){
+    // If the user cancels/fingerprint fails, simply leave the PIN screen open.
+    // PIN remains available as the normal fallback.
+    console.warn("Fingerprint unlock failed or cancelled:",error);
+  }
 }
 
 function unlockApp(){
+  const pin = document.getElementById("unlockPin").value;
+  const savedPin = localStorage.getItem(getPinKey());
 
-let pin =
-document.getElementById("unlockPin").value;
-
-let savedPin =
-localStorage.getItem("appPin");
-
-if(pin === savedPin){
-
-document.getElementById("lockScreen")
-.style.display = "none";
-
-document.getElementById("unlockPin").value="";
-
-}else{
-
-alert("Wrong PIN");
-
-document.getElementById("unlockPin").value="";
-
-}
-
+  if(pin === savedPin){
+    document.getElementById("lockSwitch").checked = true;
+    document.getElementById("lockScreen").style.display = "none";
+    document.getElementById("unlockPin").value="";
+  }else{
+    alert("Wrong PIN");
+    document.getElementById("unlockPin").value="";
+  }
 }
 
 function forgotPin(){
-
-document.getElementById("resetPopup").style.display="flex";
-
+  document.getElementById("resetPopup").style.display="flex";
 }
 
 function closeResetPopup(){
-
-document.getElementById("resetPopup").style.display="none";
-
-document.getElementById("resetText").value="";
-
-document.getElementById("resetBtn").disabled=true;
-
-document.getElementById("resetBtn").style.opacity=".5";
-
+  document.getElementById("resetPopup").style.display="none";
+  document.getElementById("resetText").value="";
+  document.getElementById("resetBtn").disabled=true;
+  document.getElementById("resetBtn").style.opacity=".5";
 }
 
 function checkResetText(){
+  const text=document.getElementById("resetText").value;
+  const btn=document.getElementById("resetBtn");
 
-let text=document.getElementById("resetText").value;
-
-let btn=document.getElementById("resetBtn");
-
-if(text==="RESET"){
-
-btn.disabled=false;
-
-btn.style.opacity="1";
-
-}else{
-
-btn.disabled=true;
-
-btn.style.opacity=".5";
-
-}
-
+  if(text==="RESET"){
+    btn.disabled=false;
+    btn.style.opacity="1";
+  }else{
+    btn.disabled=true;
+    btn.style.opacity=".5";
+  }
 }
 
 function confirmReset(){
-
-localStorage.clear();
-
-location.reload();
-
+  localStorage.removeItem(getDataKey());
+  localStorage.removeItem(getPinKey());
+  localStorage.removeItem(getSyncKey());
+  localStorage.removeItem(getOwnerNameKey());
+  location.reload();
 }
+
+const appOverlayIds = [
+  "menuPopup",
+  "developerPopup",
+  "feePopup",
+  "feeStatusPopup",
+  "attendanceStatusPopup",
+  "studentDetailsPopup",
+  "resetPopup",
+  "studentPhotoViewer"
+];
+
+let overlayHistoryStack = [];
+let handlingBackOverlayClose = false;
+let pendingDeveloperPopup = false;
+let overlayObserverReady = false;
+
+function isOverlayVisible(id){
+  const el = document.getElementById(id);
+  return !!(el && getComputedStyle(el).display !== "none");
+}
+
+function hideOverlay(id){
+  const el = document.getElementById(id);
+  if(el) el.style.display = "none";
+}
+
+function clearOverlaySelection(){
+  selectedAttendanceStudent = null;
+  selectedAttendanceDate = null;
+  selectedStudentDetails = null;
+}
+
+function setupOverlayBackHandling(){
+  const observer = new MutationObserver(function(mutations){
+    mutations.forEach(function(mutation){
+      if(mutation.type !== "attributes" || mutation.attributeName !== "style") return;
+      const id = mutation.target.id;
+      if(!appOverlayIds.includes(id)) return;
+
+      const visible = isOverlayVisible(id);
+      const wasTracked = overlayHistoryStack.includes(id);
+
+      if(visible && !wasTracked){
+        history.pushState({tuitionOverlay:id}, "", location.href);
+        overlayHistoryStack.push(id);
+      }else if(!visible && wasTracked){
+        overlayHistoryStack = overlayHistoryStack.filter(x => x !== id);
+        if(!handlingBackOverlayClose){
+          // The user closed the popup normally. Remove its history layer too,
+          // so the next Back press behaves normally.
+          history.back();
+        }
+      }
+    });
+  });
+
+  appOverlayIds.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) observer.observe(el,{attributes:true,attributeFilter:["style"]});
+  });
+
+  overlayObserverReady = true;
+}
+
+function closeTopOverlayFromBack(){
+  for(let i=overlayHistoryStack.length-1;i>=0;i--){
+    const id=overlayHistoryStack[i];
+    if(isOverlayVisible(id)){
+      overlayHistoryStack.splice(i,1);
+      handlingBackOverlayClose = true;
+      hideOverlay(id);
+      clearOverlaySelection();
+      setTimeout(()=>{ handlingBackOverlayClose=false; },0);
+      return true;
+    }
+    overlayHistoryStack.splice(i,1);
+  }
+
+  // Safety fallback in case an overlay was opened before the observer tracked it.
+  for(let i=appOverlayIds.length-1;i>=0;i--){
+    if(isOverlayVisible(appOverlayIds[i])){
+      handlingBackOverlayClose = true;
+      hideOverlay(appOverlayIds[i]);
+      clearOverlaySelection();
+      setTimeout(()=>{ handlingBackOverlayClose=false; },0);
+      return true;
+    }
+  }
+  return false;
+}
+
+function handleOutsideTap(event){
+  const menu = document.getElementById("menuPopup");
+  const menuButton = event.target.closest && event.target.closest('button[onclick="toggleMenu()"]');
+  if(menu && isOverlayVisible("menuPopup") && !menu.contains(event.target) && !menuButton){
+    menu.style.display = "none";
+  }
+}
+
+document.addEventListener("click", handleOutsideTap);
+
+window.addEventListener("popstate", function(event){
+  if(pendingDeveloperPopup){
+    pendingDeveloperPopup = false;
+    const popup=document.getElementById("developerPopup");
+    if(popup) popup.style.display="flex";
+    return;
+  }
+  if(closeTopOverlayFromBack()) return;
+
+  // Main app navigation: restore the previous section first.
+  if(pendingHomeNavigation){
+    pendingHomeNavigation=false;
+    sectionHistoryStack=[];
+    handlingSectionPop=true;
+    showSection('homeSection','homeNav',true);
+    handlingSectionPop=false;
+    return;
+  }
+
+  if(event.state && event.state.tuitionSection){
+    // The browser moved to the previous section entry. Remove the current
+    // section from our logical stack and display the section in the state.
+    if(sectionHistoryStack.length) sectionHistoryStack.pop();
+    const target=event.state.tuitionSection;
+    handlingSectionPop=true;
+    showSection(target, sectionNavId(target), true);
+    handlingSectionPop=false;
+    return;
+  }
+
+  // Reached the app's root/guard entry. If we are not on Home yet, the
+  // Back press becomes the step that takes us Home. On Home, do nothing
+  // here so the browser/WebView can handle the next Back normally.
+  if(currentSectionId!=='homeSection'){
+    sectionHistoryStack=[];
+    handlingSectionPop=true;
+    showSection('homeSection','homeNav',true);
+    handlingSectionPop=false;
+  }
+  return;
+});
+
+window.addEventListener("load", function(){
+  setupOverlayBackHandling();
+  currentSectionId='homeSection';
+  sectionHistoryStack=[];
+  // One guard entry lets the first Back press be intercepted while the app is open.
+  history.pushState({tuitionAppGuard:true}, "", location.href);
+});
+
 function toggleMenu(){
-
-let menu=document.getElementById("menuPopup");
-
-if(menu.style.display=="block"){
-
-menu.style.display="none";
-
-}else{
-
-menu.style.display="block";
-
-}
-
+  const menu=document.getElementById("menuPopup");
+  menu.style.display = menu.style.display=="block" ? "none" : "block";
 }
 
 function changePin(){
+  document.getElementById("menuPopup").style.display="none";
 
-document.getElementById("menuPopup").style.display="none";
+  const savedPin = localStorage.getItem(getPinKey());
+  if(!savedPin){
+    alert("App Lock is not enabled. Please enable App Lock first.");
+    return;
+  }
 
-let savedPin = localStorage.getItem("appPin");
+  const oldPin = prompt("Enter Current PIN");
+  if(oldPin === null) return;
 
-if(!savedPin){
-  alert("App Lock is not enabled. Please enable App Lock first.");
-  return;
+  if(oldPin !== savedPin){
+    alert("Wrong Current PIN");
+    return;
+  }
+
+  const newPin = prompt("Create New 4 Digit PIN");
+  if(newPin === null) return;
+
+  if(newPin.length !== 4 || isNaN(newPin)){
+    alert("PIN must be 4 digits");
+    return;
+  }
+
+  const confirmPin = prompt("Re-enter New PIN");
+  if(confirmPin === null) return;
+
+  if(confirmPin !== newPin){
+    alert("New PINs do not match");
+    return;
+  }
+
+  localStorage.setItem(getPinKey(), newPin);
+  saveLocalData(true);
+  alert("PIN Changed Successfully");
 }
 
-let oldPin = prompt("Enter Current PIN");
+function changeGoogleAccount(){
+  document.getElementById("menuPopup").style.display = "none";
 
-if(oldPin === null) return;
+  const confirmChange = confirm(
+    "Change Google Account?\n\n" +
+    "Your current account's data will remain saved separately. " +
+    "You will be taken to Google Sign in."
+  );
 
-if(oldPin !== savedPin){
-  alert("Wrong Current PIN");
-  return;
+  if(!confirmChange) return;
+
+  // Keep the current account's local/Drive data. Only clear the active
+  // login identity so the next account cannot see this account's data.
+  clearTimeout(syncTimer);
+  driveAccessToken = null;
+  driveTokenClient = null;
+  googleUser = null;
+  currentAccountKey = null;
+  currentAccountSub = null;
+
+  localStorage.removeItem("googleLoggedIn");
+  localStorage.removeItem("googleEmail");
+  localStorage.removeItem("googleSub");
+  localStorage.removeItem("driveAuthorized");
+
+  if(window.google?.accounts?.id){
+    google.accounts.id.disableAutoSelect();
+  }
+
+  location.reload();
 }
 
-let newPin = prompt("Create New 4 Digit PIN");
+async function backupToGoogleDrive(){
+  document.getElementById("menuPopup").style.display="none";
 
-if(newPin === null) return;
-
-if(newPin.length !== 4 || isNaN(newPin)){
-  alert("PIN must be 4 digits");
-  return;
+  try {
+    await syncWithGoogleDrive();
+    alert("Google Drive sync completed.");
+  } catch(error) {
+    console.error(error);
+    alert("Google Drive sync failed. Your local data is safe.");
+  }
 }
 
-let confirmPin = prompt("Re-enter New PIN");
+async function restoreFromGoogleDrive(){
+  document.getElementById("menuPopup").style.display="none";
 
-if(confirmPin === null) return;
+  try {
+    await getDriveToken(false);
+    const driveFile = await findDriveDataFile();
 
-if(confirmPin !== newPin){
-  alert("New PINs do not match");
-  return;
+    if(!driveFile){
+      alert("No Google Drive data found for this Google account.");
+      return;
+    }
+
+    const backup = await readDriveData(driveFile.id);
+
+    if(!Array.isArray(backup.students)){
+      alert("Invalid Google Drive data.");
+      return;
+    }
+
+    const confirmRestore = confirm(
+      "Google Drive data mil gaya.\n\n" +
+      "Kya aap is data ko restore karna chahte hain?\n\n" +
+      "Current local data will be replaced."
+    );
+
+    if(!confirmRestore) return;
+
+    students = backup.students;
+    students.forEach(s => {
+      if(!s.fees) s.fees=[];
+      if(!s.attendance) s.attendance=[];
+      if(typeof s.active !== "boolean") s.active=true;
+    });
+
+    const updatedAt = Number(backup.updatedAt || Date.now());
+    localStorage.setItem(getDataKey(), JSON.stringify(students));
+    if (Object.prototype.hasOwnProperty.call(backup, "ownerName") && String(backup.ownerName || "").trim()) {
+      localStorage.setItem(getOwnerNameKey(), String(backup.ownerName).trim());
+    }
+    if (Object.prototype.hasOwnProperty.call(backup, "appPin")) {
+      if (backup.appPin) localStorage.setItem(getPinKey(), backup.appPin);
+      else localStorage.removeItem(getPinKey());
+    }
+    setSyncMeta({updatedAt: updatedAt, pending:false, driveFileId:driveFile.id});
+    updateOwnerNameDisplay();
+    render();
+    document.getElementById("lockSwitch").checked = !!localStorage.getItem(getPinKey());
+
+    alert("Google Drive data restored successfully.");
+  } catch(error) {
+    console.error(error);
+    alert("Google Drive restore failed. Your local data is safe.");
+  }
 }
 
-localStorage.setItem("appPin", newPin);
-
-alert("PIN Changed Successfully");
-
-}
 function backupData(){
+  document.getElementById("menuPopup").style.display="none";
 
-document.getElementById("menuPopup").style.display="none";
+  const backup = {
+    students: students,
+    ownerName: getOwnerName(),
+    appPin: localStorage.getItem(getPinKey())
+  };
 
-let backup = {
+  const data = JSON.stringify(backup,null,2);
+  const blob = new Blob([data],{type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
 
-students: students,
+  const today = new Date();
+  const fileName =
+    "Tuition_Backup_" +
+    today.getFullYear() + "-" +
+    String(today.getMonth()+1).padStart(2,"0") + "-" +
+    String(today.getDate()).padStart(2,"0") +
+    ".json";
 
-appPin: localStorage.getItem("appPin")
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
 
-};
-
-let data = JSON.stringify(backup,null,2);
-
-let blob = new Blob([data],{
-type:"application/json"
-});
-
-let url = URL.createObjectURL(blob);
-
-let a = document.createElement("a");
-
-let today = new Date();
-
-let fileName =
-"Tuition_Backup_" +
-today.getFullYear() + "-" +
-String(today.getMonth()+1).padStart(2,"0") + "-" +
-String(today.getDate()).padStart(2,"0") +
-".json";
-
-a.href = url;
-
-a.download = fileName;
-
-a.click();
-
-URL.revokeObjectURL(url);
-
-alert("Backup Created Successfully");
-
+  alert("Backup Created Successfully");
 }
 
 function restoreData(){
-
-document.getElementById("menuPopup").style.display="none";
-
-document.getElementById("restoreFile").click();
-
+  document.getElementById("menuPopup").style.display="none";
+  document.getElementById("restoreFile").click();
 }
+
 function restoreBackup(event){
+  const file = event.target.files[0];
+  if(!file) return;
 
-let file = event.target.files[0];
+  const reader = new FileReader();
 
-if(!file) return;
+  reader.onload = function(e){
+    try{
+      const backup = JSON.parse(e.target.result);
 
-let reader = new FileReader();
+      if(!backup.students){
+        alert("Invalid Backup File");
+        return;
+      }
 
-reader.onload = function(e){
+      students = backup.students;
+      students.forEach(s => {
+        if(!s.fees) s.fees=[];
+        if(!s.attendance) s.attendance=[];
+        if(typeof s.active !== "boolean") s.active=true;
+      });
 
-try{
+      if(backup.ownerName && String(backup.ownerName).trim()){
+        localStorage.setItem(getOwnerNameKey(), String(backup.ownerName).trim());
+      }
+      if(backup.appPin){
+        localStorage.setItem(getPinKey(), backup.appPin);
+      }else{
+        localStorage.removeItem(getPinKey());
+      }
 
-let backup = JSON.parse(e.target.result);
+      updateOwnerNameDisplay();
+      saveLocalData(true);
+      render();
 
-if(!backup.students){
+      if(localStorage.getItem(getPinKey())){
+        document.getElementById("lockSwitch").checked=true;
+      }else{
+        document.getElementById("lockSwitch").checked=false;
+      }
 
-alert("Invalid Backup File");
+      alert("Backup Restored Successfully");
+    }catch{
+      alert("Invalid Backup File");
+    }
 
-return;
+    document.getElementById("restoreFile").value="";
+  };
 
+  reader.readAsText(file);
 }
 
-students = backup.students;
-students.forEach(s => {
-  if(!s.fees) s.fees=[];
-  if(!s.attendance) s.attendance=[];
-  if(typeof s.active !== "boolean") s.active=true;
-});
-
-localStorage.setItem(
-"tuitionData",
-JSON.stringify(students)
-);
-
-if(backup.appPin){
-
-localStorage.setItem(
-"appPin",
-backup.appPin
-);
-
-}else{
-
-localStorage.removeItem(
-"appPin"
-);
-
+function deleteStudent(index){
+  if(confirm("Delete Student?")){
+    students.splice(index,1);
+    saveLocalData(true);
+    render();
+  }
 }
 
-render();
-
-if(localStorage.getItem("appPin")){
-
-document.getElementById("lockSwitch").checked=true;
-
-}else{
-
-document.getElementById("lockSwitch").checked=false;
-
+function openDeveloperPopup(){
+  const menu=document.getElementById("menuPopup");
+  if(menu && isOverlayVisible("menuPopup")){
+    pendingDeveloperPopup = true;
+    menu.style.display="none";
+    // The overlay observer removes the menu's history layer; the popstate
+    // handler then opens the developer popup without an extra Back action.
+    return;
+  }
+  const popup=document.getElementById("developerPopup");
+  if(popup) popup.style.display="flex";
 }
 
-alert("Backup Restored Successfully");
-
-}catch{
-
-alert("Invalid Backup File");
-
+function closeDeveloperPopup(){
+  const popup=document.getElementById("developerPopup");
+  if(popup) popup.style.display="none";
 }
 
-document.getElementById("restoreFile").value="";
-
-};
-
-reader.readAsText(file);
-
-}
-function deleteStudent(index){  
-  if(confirm("Delete Student?")){  
-  students.splice(index,1);  
-  render();   
-}  
-}  
- 
 function contactDeveloper(event){
   event.preventDefault();
 
@@ -1507,79 +3198,103 @@ function contactDeveloper(event){
   const whatsappUrl = "whatsapp://send?phone=91" + phone;
   const callUrl = "tel:" + phone;
 
-  // Try WhatsApp first. If WhatsApp is not installed, fall back to calling.
-  let fallback = setTimeout(function(){
+  const fallback = setTimeout(function(){
     window.location.href = callUrl;
   }, 900);
 
   window.location.href = whatsappUrl;
 
-  // If navigation succeeds, this page normally leaves the app;
-  // the timeout is cleared when the page becomes hidden.
   document.addEventListener("visibilitychange", function(){
     if(document.hidden) clearTimeout(fallback);
   }, {once:true});
 }
 
-</script>    <script>  
-window.onload = function () {  
-  let today = new Date();  
-document.getElementById("attDate").valueAsDate = today;  
-checkSundayButton();
+async function initializeApp(){
+  updateGoogleEmailDisplay();
 
-document.getElementById("attDate")
-.addEventListener("change", checkSundayButton);
-document.getElementById("reportMonth").value =
+  const loggedIn = localStorage.getItem("googleLoggedIn") === "true";
+  const savedSub = localStorage.getItem("googleSub");
+
+  if (loggedIn && savedSub) {
+    currentAccountSub = savedSub;
+    currentAccountKey = accountKeyFromSub(savedSub);
+
+    document.body.classList.add("googleLoggedIn");
+    document.getElementById("googleLogin").style.display = "none";
+
+    loadAccountData();
+    updateOwnerNameDisplay();
+  } else {
+    document.body.classList.remove("googleLoggedIn");
+    document.getElementById("googleLogin").style.display = "flex";
+    initGoogleLogin();
+  }
+
+  const today = new Date();
+  document.getElementById("attDate").valueAsDate = today;
+  checkSundayButton();
+
+  document.getElementById("attDate").addEventListener("change", function(){
+    checkSundayButton();
+    renderAttendance();
+  });
+  document.getElementById("reportMonth").value =
     String(today.getMonth() + 1).padStart(2, "0");
-  let saved =  
-    localStorage.getItem("tuitionData");  
-  if(saved){
-students = JSON.parse(saved);
-students.forEach(s => {
-if(!s.fees) s.fees = [];
-if(!s.attendance) s.attendance = [];
-if(typeof s.active === "undefined") s.active = true;
+
+  if (loggedIn && savedSub) {
+    if (!getOwnerName()) {
+      const email = localStorage.getItem("googleEmail") || "";
+      const suggestedName = email ? email.split("@")[0].replace(/[._-]+/g, " ").replace(/\b\w/g, c => c.toUpperCase()) : "";
+      ensureOwnerName(suggestedName);
+    } else {
+      updateOwnerNameDisplay();
+    }
+    render();
+    checkLock();
+
+    // Re-obtain a short-lived Drive token after every page load.
+    // No manual backup action is required.
+    if (navigator.onLine) {
+      initDriveAuthorization(false)
+        .then(() => syncWithGoogleDrive())
+        .catch(error => {
+          console.warn("Drive authorization pending:", error);
+          setDriveSyncStatus("Drive permission needed", "error");
+        });
+    } else {
+      setDriveSyncStatus("Offline — changes saved locally", "error");
+    }
+  }
+}
+
+window.addEventListener("load", function(){
+  startAutomaticSync();
+  initializeApp();
 });
-
-render();
-if(localStorage.getItem("appPin")){
-
-document.getElementById(
-"lockSwitch"
-).checked = true;
-
-}
-}
-  checkLock();
-};  
-  </script>  
+</script>  
 <input
 type="file"
 id="restoreFile"
 accept=".json"
 style="display:none"
 onchange="restoreBackup(event)">
+<div id="studentPhotoViewer" class="photoViewer">
+  <div class="photoViewerTop">
+    <button class="photoViewerBtn" onclick="closeStudentPhoto()">← Back</button>
+    <b id="studentPhotoTitle" style="color:white;font-size:17px;"></b>
+  </div>
+  <img id="studentPhotoLarge" src="" alt="Student photo">
+  <div class="photoViewerActions">
+    <button class="photoViewerChange" onclick="changeStudentPhoto()">Change Photo</button>
+    <button class="photoViewerRemove" onclick="removeStudentPhoto()">Remove Photo</button>
+  </div>
+</div>
+
   <script>
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker.register("service-worker.js");
 }
   </script>
-
-<div class="card" style="text-align:center;">
-  <div style="font-weight:700;font-size:18px;">Tuition Attendance Manager</div>
-  <div style="margin-top:6px;font-size:13px;color:#666;">Developed by Aayush Kumar</div>
-  <div style="margin-top:10px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap;">
-    <a href="whatsapp://send?phone=919279060820"
-       onclick="contactDeveloper(event)"
-       style="text-decoration:none;color:#25D366;font-weight:600;font-size:13px;">
-      📞 Contact Developer
-    </a>
-    <a href="mailto:aayushaniket1722@gmail.com"
-       style="text-decoration:none;color:#0d6efd;font-weight:600;font-size:13px;">
-      ✉️ Email
-    </a>
-  </div>
-</div>
 
 </body>  
 </html>
