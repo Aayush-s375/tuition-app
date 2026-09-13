@@ -2327,10 +2327,26 @@ function saveFee(){
     const end=document.getElementById('feePeriodEnd').value;
     if(!start || !end){ alert('Select Fee Period'); return; }
     if(feeDateObj(end)<feeDateObj(start)){ alert('End date must be after start date'); return; }
+
+    // Every saved fee update is kept as a separate record.
+    // Do not allow a new credited period to overlap any already-credited period.
+    const newStart=feeDateObj(start), newEnd=feeDateObj(end);
+    const overlapping=(st.fees||[]).find(f=>{
+      if(f.status!=='credited') return false;
+      const range=getCreditedRange(f,st);
+      if(!range) return false;
+      const rs=feeDateObj(range.start), re=feeDateObj(range.end);
+      return rs && re && newStart<=re && newEnd>=rs;
+    });
+    if(overlapping){
+      const range=getCreditedRange(overlapping,st);
+      alert(`This fee period overlaps an already saved period: ${formatFeeShortDate(range.start)} – ${formatFeeShortDate(range.end)}.\n\nPlease select a new period that does not overlap.`);
+      return;
+    }
+
     const days=daysBetweenDates(start,end);
     record={type:'period',periodStart:start,periodEnd:end,days,status:'credited',amount:String(amount),mode,date,updatedAt:Date.now()};
-    const old=st.fees.find(f=>f.type==='period' && f.periodStart===start && f.periodEnd===end);
-    if(old) Object.assign(old,record); else st.fees.push(record);
+    st.fees.push(record);
     st.feeCycle='period';
 
   }
