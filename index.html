@@ -2002,15 +2002,6 @@ function renderReports(){
   if(reportSlideIndex < 0) reportSlideIndex=0;
   if(reportSlideIndex >= reportStudents.length) reportSlideIndex=reportStudents.length-1;
 
-  const monthNames = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December"
-  ];
-  const monthName = monthNames[Number(selectedMonth)-1] || selectedMonth;
-  const selectedKey=`${selectedYear}-${String(selectedMonth).padStart(2,'0')}`;
-  const monthStart=`${selectedKey}-01`;
-  const monthEnd=`${selectedKey}-${String(new Date(Number(selectedYear),Number(selectedMonth),0).getDate()).padStart(2,'0')}`;
-
   let slidesHtml = "";
 
   reportStudents.forEach((item,slideIndex)=>{
@@ -2072,53 +2063,20 @@ function renderReports(){
       }
     });
 
-    if(attendanceHtml==="") attendanceHtml='<p style="text-align:center;color:#666;">No attendance found</p>';
-
-    const feeItems=getFeeStatusItems(s,monthEnd).filter(item=>{
-      const start=feeDateObj(item.start), end=feeDateObj(item.end);
-      return start && end && start<=feeDateObj(monthEnd) && end>=feeDateObj(monthStart);
-    }).sort((a,b)=>String(a.start||'').localeCompare(String(b.start||'')));
-
-    const hasCredited=feeItems.some(item=>item.record?.status==='credited');
-    let feeHtml = "";
-    if(feeItems.length){
-      feeItems.forEach(item=>{
-        const rec=item.record;
-        const amount=Number(rec?.amount || getKnownFeeAmount(s) || 0);
-        if(rec?.status==='credited'){
-          const paymentDate=rec.date ? formatFeeDate(rec.date) : '';
-          feeHtml += `<div style="padding:9px 0;border-bottom:1px solid #edf0f4;"><b>${item.label}</b><br><span style="color:#198754;font-weight:700;">Credited</span> ₹${amount} via ${rec.mode||'Mode not set'} on ${paymentDate}</div>`;
-        }else{
-          feeHtml += `<div style="padding:9px 0;border-bottom:1px solid #edf0f4;"><b>${item.label}</b><br><span style="color:#b02a37;font-weight:700;">Pending</span>${amount ? ` · ₹${amount}` : ''}</div>`;
-        }
-      });
-    }else{
-      feeHtml = `<div style="padding:9px 0;color:#666;">Pending</div>`;
-    }
+    if(attendanceHtml==="") attendanceHtml="<p>No attendance found</p>";
 
     slidesHtml += `
     <div class="student reportSlide ${slideIndex===reportSlideIndex?'active':''}" data-report-slide="${slideIndex}">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
         <h3 style="color:#0d6efd;font-weight:700;font-size:20px;margin:0;cursor:pointer;text-decoration:underline;" onclick="openStudentDetails(${index})">${s.name}</h3>
         <button class="feeBtn" onclick="downloadPDF(${index})" style="padding:7px 10px;min-width:0;white-space:nowrap;">Print Report</button>
       </div>
 
-      <div style="font-size:13px;color:#606775;margin-bottom:4px;"><b>Month :</b> ${monthName}, ${selectedYear}</div>
-      <hr style="border:0;border-top:1px solid #e1e4ea;margin:10px 0 14px;">
-
-      <div style="font-size:15px;font-weight:800;margin:0 0 8px;">Fee Details</div>
-      ${hasCredited ? `<div style="color:green;font-weight:700;margin:0 0 8px;">Fee Collected ✓</div>` : ""}
-      ${feeHtml}
-
-      <div style="font-size:15px;font-weight:800;margin:16px 0 8px;">Attendance</div>
       ${attendanceHtml}
 
       <div class="summary">
-        <span style="color:green;font-weight:700;">P : ${present}</span> |
-        <span style="color:red;font-weight:700;">A : ${absent}</span> |
-        <span style="color:purple;font-weight:700;">L : ${leave}</span> |
-        <span style="color:blue;font-weight:700;">S : ${sunday}</span>
-        ${extraHoliday > 0 ? `| <span style="color:#ff8800;font-weight:700;">EH : ${extraHoliday}</span>` : ""}
+        P : ${present} | A : ${absent} | L : ${leave} | S : ${sunday}
+        ${extraHoliday > 0 ? `| EH : ${extraHoliday}` : ""}
       </div>
     </div>`;
   });
@@ -2143,6 +2101,7 @@ function renderReports(){
 
   setupReportSwipe();
 }
+
 function changeReportSlide(direction){
   const total = document.querySelectorAll("#reportSlider .reportSlide").length;
   if(!total) return;
@@ -2305,9 +2264,9 @@ function renderFeeDetails(st){
       hasCredited=true;
       const paymentDate=rec.date ? formatFeeDate(rec.date) : '';
       const mode=rec.mode || 'Mode not set';
-      rows+=`<div class="feeDetailRow"><b>${item.label}</b><br><span class="feeCredited">Credited</span> ₹${amount} via ${mode} on ${paymentDate}<button class="miniBtn red" style="float:right;margin-top:-25px;" onclick="deleteFeeRecord(${st.fees.indexOf(rec)})">🗑️</button></div>`;
+      rows+=`<div class="feeDetailRow" style="position:relative;padding-right:52px;"><b>${item.label}</b><br><span class="feeCredited">Credited</span> · ₹${amount}<br><span style="color:#606775;font-size:13px;">${paymentDate} · ${mode}</span><button class="miniBtn red" style="position:absolute;right:0;top:50%;transform:translateY(-50%);" onclick="deleteFeeRecord(${st.fees.indexOf(rec)})">🗑️</button></div>`;
     }else{
-      rows+=`<div class="feeDetailRow"><b>${item.label}</b><br><span class="feePending">Pending</span>${amount ? ` · ₹${amount}` : ''}</div>`;
+      rows+=`<div class="feeDetailRow" style="position:relative;padding-right:52px;"><b>${item.label}</b><br><span class="feePending">Pending</span>${amount ? ` · ₹${amount}` : ''}</div>`;
     }
   });
 
